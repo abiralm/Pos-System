@@ -7,7 +7,6 @@ STATUS_CHOICES = [
     ('cancelled','Cancelled')
 ]
 
-
 class Order( models.Model):
     customer_name= models.CharField(max_length=50)
     email = models.EmailField()
