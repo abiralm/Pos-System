@@ -28,13 +28,13 @@ class Order( models.Model):
         return sum(item.get_cost() for item in self.items.all())
     
     def get_grand_total(self):
-        return self.get_subtotal() - self.discount + self.tax
+        return self.get_sub_total() - self.discount + self.tax
     
     def __str__(self):
-        return 'Order {self.id}'
+        return f'Order {self.id}'
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order,related_name='order',on_delete=models.CASCADE)
+    order = models.ForeignKey(Order,related_name='items',on_delete=models.CASCADE)
     product =models.ForeignKey(Product, related_name='order_items', on_delete=models.CASCADE)
     #product_name = models.CharField(max_length=255)  in case product is deleted
     price = models.DecimalField(max_digits=10, decimal_places=2)
