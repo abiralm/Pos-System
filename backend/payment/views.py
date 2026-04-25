@@ -50,7 +50,8 @@ class PaymentView(APIView):
             order = order,
             method = method,
             amount = order.get_grand_total(),
-            status = 'pending'
+            status = 'pending',
+            stripe_id = session_data.id
         )
 
         return Response({
