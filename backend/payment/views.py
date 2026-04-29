@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -23,14 +24,16 @@ class PaymentView(APIView):
 
         if order.status == 'paid':
             return Response({"error": "Already paid"}, status=400)
-                    
+
+        if order.payments.filter(status='pending').exists():
+            return Response({"error": "A pending payment already exists for this order"}, status=400)            
 
         #stripe session data
         session_data = stripe.checkout.Session.create(
             mode='payment',
             client_reference_id=order_id,
-            success_url='http://localhost:8000/payment/success/',
-            cancel_url='http://localhost:8000/payment/cancel/',
+            success_url='http://localhost:8000/api/payment/success/',
+            cancel_url='http://localhost:8000/api/payment/cancel/',
             payment_method_types=['card'],
             line_items=[
                 {
@@ -46,6 +49,7 @@ class PaymentView(APIView):
             ],
             metadata={'order_id': order.id}
         )
+        
         payment = Payment.objects.create(
             order = order,
             method = method,
@@ -66,3 +70,10 @@ class PaymentView(APIView):
         #     "message": "Payment successful",
         #     "payment_id": payment.id
         # },status=status.HTTP_200_OK)
+
+def payment_success(request):
+    return HttpResponse("Payment successful! You can close this page.")
+
+
+def payment_cancel(request):
+    return HttpResponse("Payment canceled.")

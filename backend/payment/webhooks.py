@@ -20,17 +20,6 @@ def stripe_webhook(request):
         # Invalid signature
         return HttpResponse(status=400)
 
-    # if endpoint_secret:
-    #         # Only verify the event if you've defined an endpoint secret
-    #         # Otherwise, use the basic event deserialized with JSON
-    #         sig_header = request.headers.get('stripe-signature')
-    #         try:
-    #             event = client.construct_event(
-    #                 payload, sig_header, endpoint_secret
-    #             )
-    #         except stripe.error.SignatureVerificationError as e:
-    #         print(' Webhook signature verification failed.' + str(e))
-    #         return jsonify(success=False)
 
     # Handle the event
     if event['type'] == 'checkout.session.completed':
