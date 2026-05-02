@@ -1,0 +1,57 @@
+<html>
+
+<body>
+
+    <h1>POS System</h1>
+
+    <p>
+        Invoice No. #{{ order.id }}<br>
+        {{ order.created|date:"M d, Y" }}
+    </p>
+
+    <hr>
+
+    <h3>Bill To:</h3>
+    <p>
+        {{ order.first_name }} {{ order.last_name }}<br>
+        {{ order.email }}<br>
+        {{ order.address }}
+    </p>
+
+    <h3>Items bought</h3>
+
+    <table border="1" cellspacing="0" cellpadding="5">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Cost</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order.items.all %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>${{ item.price }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>${{ item.get_cost }}</td>
+            </tr>
+            {% endfor %}
+
+            <tr>
+                <td colspan="3"><strong>Total</strong></td>
+                <td>${{ order.get_grand_total}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br>
+
+    <p>
+        Status: {{order.status}}
+    </p>
+
+</body>
+
+</html>
