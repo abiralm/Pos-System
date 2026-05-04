@@ -18,7 +18,6 @@ def notify_payment(order_id):
         'order': order
     })
 
-    # 2. Generate PDF into memory (not HttpResponse)
     pdf_buffer = BytesIO()
     pisa_status = pisa.CreatePDF(html, dest=pdf_buffer)
 
