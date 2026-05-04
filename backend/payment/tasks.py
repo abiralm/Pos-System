@@ -29,7 +29,7 @@ def notify_payment(order_id):
     subject="Hello",
     body="Body goes here",
     from_email=settings.EMAIL_HOST_USER,
-    to=['laribabiral@gmail.com']
+    to=[order.email]
     )
 
     email.attach(f'order_{order.id}.pdf', pdf_buffer.getvalue(), 'application/pdf')
