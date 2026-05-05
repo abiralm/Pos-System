@@ -25,8 +25,8 @@ def notify_payment(order_id):
         return f"PDF generation failed for order {order_id}"
 
     email = EmailMessage(
-    subject="Hello",
-    body="Body goes here",
+    subject= f"Invoice for Order :{order_id}",
+    body=f"Please find the invoice of your order: Order {order_id}",
     from_email=settings.EMAIL_HOST_USER,
     to=[order.email]
     )
