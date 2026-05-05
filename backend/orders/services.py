@@ -9,11 +9,21 @@ def create_order_from_cart(cart,customer_name,email):
     )
 
     for item in cart:
+
+        product = item['product']
+        quantity=item['quantity']
+
+        if quantity>product.stock:
+            raise ValueError(f"Not enough stock for {product.name}")
+        
+        product.stock -= quantity
+        product.save()
+
         OrderItem.objects.create(
             order=order,
-            product = item['product'],
+            product = product,
             price = item['price'],
-            quantity=item['quantity']
+            quantity= quantity,
         )
     
     return order

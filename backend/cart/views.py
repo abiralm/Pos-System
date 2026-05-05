@@ -12,6 +12,9 @@ def add_to_cart(request):
     quantity = int(request.data.get('quantity',1))
     product = get_object_or_404(Product,id=product_id)
 
+    if quantity > product.stock:
+        return Response({'error': 'Not enough stock'}, status=400)
+
     cart.add(product,quantity)
     return Response({
         'message':'Added to cart',
