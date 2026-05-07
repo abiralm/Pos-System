@@ -1,4 +1,8 @@
-import Image from "next/image";
+'use client'
+
+import { fetchCart } from "../services/api";
+
+fetchCart().then(data => console.log("cart data:",data)).catch(err => console.error(err));
 
 export default function Home() {
   return (
