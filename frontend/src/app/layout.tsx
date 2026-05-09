@@ -14,13 +14,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={inter.variable}>
       <body>
-        <SidebarProvider>
-          <AppSidebar />
+        {/* <SidebarProvider>
+          <AppSidebar /> */}
           <main>
-            <SidebarTrigger />
+            {/* <SidebarTrigger /> */}
             {children}
           </main>
-        </SidebarProvider>
+        {/* </SidebarProvider> */}
       </body>
     </html>
   )
