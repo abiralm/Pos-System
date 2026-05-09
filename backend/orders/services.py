@@ -24,6 +24,7 @@ def create_order_from_cart(cart,customer_name,email):
             product = product,
             price = item['price'],
             quantity= quantity,
+            product_name=item['product'].name 
         )
     
     return order

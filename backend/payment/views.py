@@ -1,12 +1,12 @@
 from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
 from config import settings
 from .serializers import PaymentSerializer
 from .models import Payment
 from orders.models import Order
 import stripe
+from django.shortcuts import get_object_or_404
 
 #stripe instance
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -20,7 +20,7 @@ class PaymentView(APIView):
 
         order_id = serializer.validated_data['order_id']
         method = serializer.validated_data['method']
-        order = Order.objects.get(id=order_id)
+        order = get_object_or_404(Order, id=order_id)
 
         if order.status == 'paid':
             return Response({"error": "Already paid"}, status=400)
