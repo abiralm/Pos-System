@@ -27,8 +27,19 @@ def remove_from_cart(request):
     cart = Cart(request)
     product_id = request.data.get('product_id')
     quantity = int(request.data.get('quantity'))
+    quantity = request.data.get('quantity')
+
     if quantity is None:
         return Response({'error': 'quantity required'}, status=400)
+
+    try:
+        quantity = int(quantity)
+    except (TypeError, ValueError):
+        return Response({'error': 'quantity must be an integer'}, status=400)
+
+    if quantity <= 0:
+        return Response({'error': 'quantity must be greater than 0'}, status=400)
+    
     product = get_object_or_404(Product,id=product_id)
 
     cart.remove(product,quantity)
