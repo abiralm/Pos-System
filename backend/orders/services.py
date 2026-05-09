@@ -22,7 +22,7 @@ def create_order_from_cart(cart,customer_name,email):
         OrderItem.objects.create(
             order=order,
             product = product,
-            price = item['price'],
+            price = product.price, #price = item['price'],
             quantity= quantity,
             product_name=item['product'].name 
         )

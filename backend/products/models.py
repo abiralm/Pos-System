@@ -19,7 +19,7 @@ class Category (models.Model):
 class Product(models.Model):
     category = models.ForeignKey(Category, related_name='products',on_delete=models.CASCADE)
     name=models.CharField (max_length=200)
-    slug = models.SlugField(max_length=200)
+    slug = models.SlugField(max_length=200,unique=True)
     description  = models.TextField(blank = True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     stock = models.PositiveIntegerField() # this may not be neede as available filed is used
