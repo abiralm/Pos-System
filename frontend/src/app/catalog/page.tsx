@@ -21,7 +21,12 @@ export default function Home() {
           </CardContent>
 
           <CardHeader>
-            <CardTitle>Coca Cola</CardTitle>
+            <CardTitle>
+              <div className="flex gap-4 items-center">
+                <h1 className="text-xl">Coca Cola</h1>
+                <h2 className="text-emerald-700 font-bold">$6.00</h2>
+              </div>
+            </CardTitle>
             <CardDescription className="line-clamp-3">
               Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nobis dolor officia commodi consequatur temporibus totam distinctio asperiores! Laudantium magni quae earum. Voluptates quod numquam eum dolorum a? Repellendus, reiciendis natus.
             </CardDescription>
