@@ -6,7 +6,7 @@ app_name ='payments'
 
 
 urlpatterns = [
-    path('pay/', PaymentView.as_view(), name='payment'),
+    path('', PaymentView.as_view(), name='payment'),
     path('webhook/',stripe_webhook, name='stripe-webhook'),
     path('success/', payment_success),
     path('cancel/', payment_cancel),
