@@ -171,3 +171,5 @@ SIMPLE_JWT = {
 }
 
 INSTALLED_APPS += ['rest_framework_simplejwt.token_blacklist']
+
+AUTH_USER_MODEL = 'users.User'
