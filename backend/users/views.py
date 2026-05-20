@@ -1,36 +1,15 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.views import TokenRefreshView
 from django.contrib.auth import authenticate
-from .serializers import RegisterSeriliazer
+from .serializers import POSTokenObtainPairSerializer, RegisterSerializer
 from .permissions import IsAdmin
+from rest_framework_simplejwt.views import TokenObtainPairView
 
-class LoginView(APIView):
-    permission_classes =[AllowAny]
 
-    def post(self,request):
-        username= request.data.get('username')
-        password= request.data.get('password')
-
-        user = authenticate(username=username,password=password)
-        if not user:
-            return Response({'error': 'Invalid credentials'}, status=401)
-        
-        refresh = RefreshToken.for_user(user)
-        refresh['role'] = user.role
-
-        return Response({
-            'access':  str(refresh.access_token),
-            'refresh': str(refresh),
-            'user': {
-                'id':       user.id,
-                'username': user.username,
-                'role':     user.role,
-            }
-        },status=200)
+class LoginView(TokenObtainPairView):
+    serializer_class = POSTokenObtainPairSerializer
 
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
@@ -45,16 +24,14 @@ class LogoutView(APIView):
             return Response({'error': 'Invalid token'}, status=400)
 
 class RegisterView(APIView):
-    
     def get_permissions(self):
-
         # Public registration allowed for POST
         if self.request.method == 'POST':
             return [AllowAny()]
 
         return super().get_permissions()
     def post(self,request):
-        serializer = RegisterSeriliazer(
+        serializer = RegisterSerializer(
             data = request.data,
             context = {'request':request}
         )

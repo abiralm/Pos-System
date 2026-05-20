@@ -1,5 +1,4 @@
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import serializers
 from .models import User
 
@@ -7,35 +6,51 @@ class POSTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-        # Add custom claims — readable without a DB hit
+
+        # Add custom claims 
         token['role'] = user.role
         token['username'] = user.username
         return token
+    
+    def validate(self, attrs):
+        data = super().validate(attrs)
 
-class POSTokenObtainPairView(TokenObtainPairView):
-    serializer_class = POSTokenObtainPairSerializer
+        data['user'] = {
+            'id': self.user.id,
+            'username': self.user.username,
+            'role': self.user.role
+        }
 
-class RegisterSeriliazer(serializers.ModelSerializer):
+        return data
+
+
+
+class RegisterSerializer(serializers.ModelSerializer):
+
+    email = serializers.EmailField(required=True)
+    password = serializers.CharField(write_only=True, min_length = True)
+
     class Meta:
         model= User
-        fields = ['username', 'password', 'role']
+        fields = ['username','email', 'password']
+
+    def validate_email(self, value):
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("Email already in use")
+        return value
 
     def validate_role(self,value):
         request = self.context.get('request')
 
         if value== 'admin':
-            if not request.user.is_authenticated:
+            if not request.user.is_authenticated or request.user.role !='admin':
                 raise serializers.ValidationError('Only admins create admins')
-            
-            if request.user.role !='admin':
-                raise serializers.ValidationError('Only admins create admins')
-        
         return value
     
     def create(self, validated_data):
         password = validated_data.pop('password')
 
-        user = User(**validated_data)
+        user = User(username= validated_data['username'],role='visitor')
         user.set_password(password)
         user.save()
 

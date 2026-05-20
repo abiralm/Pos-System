@@ -7,6 +7,7 @@ class User(AbstractUser):
         ('visitor','Visitor'),
     )
     role = models.CharField(max_length=50, choices=ROLES, default='visitor')
+    email = models.EmailField(blank= False, unique=True)
 
     groups = models.ManyToManyField(
         Group,
