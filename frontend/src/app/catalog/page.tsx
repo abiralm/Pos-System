@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { getProducts } from "@/src/services/api";
 import { ProductListType } from "@/src/types/product_types";
+import Link from "next/link";
 import { useMemo, useRef, useState, useEffect } from "react";
 
 export default function Home() {
@@ -23,7 +24,9 @@ export default function Home() {
 
   return (
     <main className="m-6">
-      <div className="p-2 m-2 border-2 border-amber-500 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="p-2 m-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+        {/* renders cards */}
         {products &&
           products.map((product) => (
             <Card key={product.id} className="overflow-hidden rounded-xl pt-0">
@@ -50,8 +53,8 @@ export default function Home() {
               </CardHeader>
 
               <CardFooter className="flex gap-2">
-                <Button className="bg-emerald-700">Add to Cart</Button>
-                <Button className="bg-blue-500">Details</Button>
+                <Button asChild className="bg-emerald-700"><Link href=''>Add to Cart</Link></Button>
+                <Button asChild className="bg-blue-500"><Link href={`catalog/${product.slug}`}>Details</Link></Button>
               </CardFooter>
             </Card>
           ))}
