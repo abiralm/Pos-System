@@ -1,8 +1,6 @@
 'use client'
 
-import { fetchCart } from "../services/api";
-
-fetchCart().then(data => console.log("cart data:",data)).catch(err => console.error(err));
+import { getProducts } from "../services/api";
 
 export default function Home() {
   return (

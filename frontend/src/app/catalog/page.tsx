@@ -2,41 +2,59 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-
+import { getProducts } from "@/src/services/api";
+import { ProductListType } from "@/src/types/product_types";
+import { useMemo, useRef, useState, useEffect } from "react";
 
 export default function Home() {
+
+  const [products, setProducts] = useState<ProductListType[]>([])
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const response = await getProducts();
+      if (response) {
+        console.log(response);
+        setProducts(response);
+      }
+    }
+    fetchProducts();
+  }, []);
+
   return (
     <main className="m-6">
-      <div className="p-2 m-2 border-2 border-amber-500 grid grid-cols-4 gap-8">
+      <div className="p-2 m-2 border-2 border-amber-500 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {products &&
+          products.map((product) => (
+            <Card key={product.id} className="overflow-hidden rounded-xl pt-0">
+              <CardContent className="p-0">
+                <div className="h-64 w-full">
+                  <img
+                    src="/6318.png"
+                    alt="Coca Cola"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+              </CardContent>
 
-        <Card className="overflow-hidden rounded-xl pt-0">
-          <CardContent className="p-0">
-            <div className="h-64 w-full">
-              <img
-                src="/6318.png"
-                alt="Coca Cola"
-                className="h-full w-full object-cover"
-              />
-            </div>
-          </CardContent>
+              <CardHeader>
+                <CardTitle>
+                  <div className="flex gap-4 items-center">
+                    <h1 className="text-xl">{product.name}</h1>
+                    <h2 className="text-emerald-700 font-bold">${product.price}</h2>
+                  </div>
+                </CardTitle>
+                <CardDescription className="line-clamp-3">
+                  {product.description}
+                </CardDescription>
+              </CardHeader>
 
-          <CardHeader>
-            <CardTitle>
-              <div className="flex gap-4 items-center">
-                <h1 className="text-xl">Coca Cola</h1>
-                <h2 className="text-emerald-700 font-bold">$6.00</h2>
-              </div>
-            </CardTitle>
-            <CardDescription className="line-clamp-3">
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nobis dolor officia commodi consequatur temporibus totam distinctio asperiores! Laudantium magni quae earum. Voluptates quod numquam eum dolorum a? Repellendus, reiciendis natus.
-            </CardDescription>
-          </CardHeader>
-
-          <CardFooter className="flex gap-2">
-              <Button className="bg-emerald-700">Add to Cart</Button>
-              <Button className="bg-blue-500">Details</Button>
-          </CardFooter>
-        </Card>
+              <CardFooter className="flex gap-2">
+                <Button className="bg-emerald-700">Add to Cart</Button>
+                <Button className="bg-blue-500">Details</Button>
+              </CardFooter>
+            </Card>
+          ))}
       </div>
     </main>
   );

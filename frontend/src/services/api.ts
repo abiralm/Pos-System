@@ -1,8 +1,9 @@
+import { ProductListType } from "../types/product_types";
 import { axiosInstance } from "./instance";
 
-export const fetchCart = async () => {
+export const getProducts = async ():Promise<ProductListType[]> => {
     try {
-        const response = await axiosInstance.get("/api/cart/");
+        const response = await axiosInstance.get("/api/products/");
         console.log("Response data:", response.data);
         return response.data;
     } catch (error) {
