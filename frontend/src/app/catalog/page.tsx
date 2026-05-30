@@ -6,10 +6,16 @@ import { getProducts } from "@/src/services/api";
 import { ProductListType } from "@/src/types/product_types";
 import Link from "next/link";
 import { useMemo, useRef, useState, useEffect } from "react";
+import { SearchBar } from "./_components/SearchBar";
+import { Tabs } from "radix-ui";
+import { TaskFilters } from "./_components/TaskFilters";
 
 export default function Home() {
 
   const [products, setProducts] = useState<ProductListType[]>([])
+  const [searchQuery, setSearchQuery] = useState<String>("")
+  const [selectedCategory, setSelectedCategory] = useState<String[]>(["All"]);
+
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -24,6 +30,13 @@ export default function Home() {
 
   return (
     <main className="m-6">
+      
+      <div className="w-full flex flex-col gap-4 p-2 m-2">
+        
+        <SearchBar />
+        <TaskFilters />
+      </div>
+
       <div className="p-2 m-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
 
         {/* renders cards */}
@@ -59,6 +72,7 @@ export default function Home() {
             </Card>
           ))}
       </div>
+
     </main>
   );
 }
