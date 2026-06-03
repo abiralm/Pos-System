@@ -9,6 +9,7 @@ import { useMemo, useRef, useState, useEffect } from "react";
 import { SearchBar } from "./_components/SearchBar";
 import { Tabs } from "radix-ui";
 import { TaskFilters } from "./_components/TaskFilters";
+import { CartSheet } from "./_components/CartSheet";
 
 export default function Home() {
 
@@ -72,6 +73,8 @@ export default function Home() {
             </Card>
           ))}
       </div>
+
+      <CartSheet/>
 
     </main>
   );
