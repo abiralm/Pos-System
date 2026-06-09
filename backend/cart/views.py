@@ -1,11 +1,13 @@
 from django.shortcuts import get_object_or_404
 from products.models import Product
 from .cart import Cart
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
+from users.permissions import IsAdmin
 
 @api_view(['POST'])
+@permission_classes([IsAdmin])
 def add_to_cart(request):
     cart = Cart(request)
     product_id = request.data.get('product_id')
@@ -23,6 +25,7 @@ def add_to_cart(request):
     }, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
+@permission_classes([IsAdmin])
 def remove_from_cart(request):
     cart = Cart(request)
     product_id = request.data.get('product_id')
@@ -50,6 +53,7 @@ def remove_from_cart(request):
     }, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
+@permission_classes([IsAdmin])
 def clear_cart(request):
     cart = Cart(request)
     cart.clear_cart()
@@ -58,6 +62,7 @@ def clear_cart(request):
     }, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
+@permission_classes([IsAdmin])
 def view_cart(request):
     cart = Cart(request)
     cart_items=[]
