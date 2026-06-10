@@ -49,3 +49,6 @@ class Cart:
                 'price':       Decimal(str(item.product.price)),
                 'total_price': item.total_price,
             }
+
+    def clear_cart(self):
+        self.cart.items.all().delete()
