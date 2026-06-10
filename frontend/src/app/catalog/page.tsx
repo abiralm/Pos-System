@@ -10,6 +10,7 @@ import { SearchBar } from "./_components/SearchBar";
 import { Tabs } from "radix-ui";
 import { TaskFilters } from "./_components/TaskFilters";
 import { CartSheet } from "./_components/CartSheet";
+import CartTest from "./_components/Cart";
 
 export default function Home() {
 
@@ -75,6 +76,7 @@ export default function Home() {
       </div>
 
       <CartSheet/>
+      <CartTest/>
 
     </main>
   );

@@ -20,5 +20,5 @@ export type AddToCartRequest = {
 export type AddToCartResponse = {
     message: string,
     cart_total: string,
-    cart_count: Number
+    cart_count: number
 }
