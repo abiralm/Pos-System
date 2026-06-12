@@ -1,4 +1,5 @@
-import React from 'react'
+'use client'
+
 import {
     Sheet,
     SheetClose,
@@ -10,18 +11,25 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet"
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-
+import { useCartStore } from '@/src/store/cartStore'
+import { useEffect } from "react"
 
 export const CartSheet = () => {
+
+    const { items, cartTotal, cartCount, fetchCart, addItem, removeItem, clearItems } = useCartStore()
+
+    useEffect(() => {
+        fetchCart()
+    }, [])
+
     return (
         <Sheet>
-            <SheetTrigger>Open</SheetTrigger>
+            <SheetTrigger asChild><Button variant="outline">Cart ({cartCount})</Button></SheetTrigger>
             <SheetContent className="flex flex-col">
                 <SheetHeader>
                     <SheetTitle>Cart</SheetTitle>
                     <SheetDescription>
-                        This action cannot be undone.
+                        {cartCount} item(s) in your cart
                     </SheetDescription>
                 </SheetHeader>
 
