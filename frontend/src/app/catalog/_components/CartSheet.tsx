@@ -33,216 +33,67 @@ export const CartSheet = () => {
                     </SheetDescription>
                 </SheetHeader>
 
-                <div className='overflow-y-auto'>
+                <div className='overflow-y-auto flex-1'>
+                    {items.length === 0 ? (
+                        <p className='text-center text-muted-foreground mt-4'>Your cart is empty</p>
+                    ) : (
+                        items.map((item) => (
+                            <div key={item.product_id} className='p-2 border-b'>
+                                <div className='flex justify-between mb-2'>
+                                    <h1>{item.name}</h1>
+                                    <h2>Rs.{item.total_price}</h2>
+                                </div>
 
-                    <div className=' p-2'>
-                        <div className='flex justify-between mb-4'>
-                            <h1>Coco Cola</h1>
-                            <h2>Rs.20</h2>
-                        </div>
+                                <div className='flex justify-between'>
+                                    <div className='flex gap-2 items-center'>
+                                        {/* + button */}
+                                        <Button
+                                            size="sm"
+                                            onClick={() => addItem({ product_id: item.product_id, quantity: '1' })}
+                                        >
+                                            +
+                                        </Button>
 
-                        <div className='flex justify-between'>
-                            <div className='flex gap-2 items-center'>
-                                <Button>+</Button>
-                                <h1>1</h1>
-                                <Button>-</Button>
+                                        <span>{item.quantity}</span>
+
+                                        {/* - button */}
+                                        <Button
+                                            size="sm"
+                                            onClick={() => removeItem(String(item.product_id), 1)}
+                                        >
+                                            -
+                                        </Button>
+                                    </div>
+
+                                    {/* Remove entire item */}
+                                    <Button
+                                        variant="destructive"
+                                        size="sm"
+                                        onClick={() => removeItem(String(item.product_id), item.quantity)}
+                                    >
+                                        Remove
+                                    </Button>
+                                </div>
                             </div>
-                            <Button>Remove</Button>
-                        </div>
+                        ))
+                    )}
+                </div>
 
+                {/* Footer */}
+                <SheetFooter className='flex flex-col gap-2'>
+                    <div className='flex justify-between font-semibold text-lg'>
+                        <span>Total:</span>
+                        <span>Rs.{cartTotal}</span>
                     </div>
 
-                    <div className=' p-2'>
-                        <div className='flex justify-between mb-4'>
-                            <h1>Coco Cola</h1>
-                            <h2>Rs.20</h2>
-                        </div>
+                    <Button
+                        variant="destructive"
+                        onClick={() => clearItems()}
+                        disabled={cartCount === 0}
+                    >
+                        Clear Cart
+                    </Button>
 
-                        <div className='flex justify-between'>
-                            <div className='flex gap-2 items-center'>
-                                <Button>+</Button>
-                                <h1>1</h1>
-                                <Button>-</Button>
-                            </div>
-                            <Button>Remove</Button>
-                        </div>
-
-                    </div>
-
-                    <div className=' p-2'>
-                        <div className='flex justify-between mb-4'>
-                            <h1>Coco Cola</h1>
-                            <h2>Rs.20</h2>
-                        </div>
-
-                        <div className='flex justify-between'>
-                            <div className='flex gap-2 items-center'>
-                                <Button>+</Button>
-                                <h1>1</h1>
-                                <Button>-</Button>
-                            </div>
-                            <Button>Remove</Button>
-                        </div>
-
-                    </div>
-
-                    <div className=' p-2'>
-                        <div className='flex justify-between mb-4'>
-                            <h1>Coco Cola</h1>
-                            <h2>Rs.20</h2>
-                        </div>
-
-                        <div className='flex justify-between'>
-                            <div className='flex gap-2 items-center'>
-                                <Button>+</Button>
-                                <h1>1</h1>
-                                <Button>-</Button>
-                            </div>
-                            <Button>Remove</Button>
-                        </div>
-
-                    </div>
-
-                    <div className=' p-2'>
-                        <div className='flex justify-between mb-4'>
-                            <h1>Coco Cola</h1>
-                            <h2>Rs.20</h2>
-                        </div>
-
-                        <div className='flex justify-between'>
-                            <div className='flex gap-2 items-center'>
-                                <Button>+</Button>
-                                <h1>1</h1>
-                                <Button>-</Button>
-                            </div>
-                            <Button>Remove</Button>
-                        </div>
-
-                    </div>
-
-                    <div className=' p-2'>
-                        <div className='flex justify-between mb-4'>
-                            <h1>Coco Cola</h1>
-                            <h2>Rs.20</h2>
-                        </div>
-
-                        <div className='flex justify-between'>
-                            <div className='flex gap-2 items-center'>
-                                <Button>+</Button>
-                                <h1>1</h1>
-                                <Button>-</Button>
-                            </div>
-                            <Button>Remove</Button>
-                        </div>
-
-                    </div>
-
-                    <div className=' p-2'>
-                        <div className='flex justify-between mb-4'>
-                            <h1>Coco Cola</h1>
-                            <h2>Rs.20</h2>
-                        </div>
-
-                        <div className='flex justify-between'>
-                            <div className='flex gap-2 items-center'>
-                                <Button>+</Button>
-                                <h1>1</h1>
-                                <Button>-</Button>
-                            </div>
-                            <Button>Remove</Button>
-                        </div>
-
-                    </div>
-
-                    <div className=' p-2'>
-                        <div className='flex justify-between mb-4'>
-                            <h1>Coco Cola</h1>
-                            <h2>Rs.20</h2>
-                        </div>
-
-                        <div className='flex justify-between'>
-                            <div className='flex gap-2 items-center'>
-                                <Button>+</Button>
-                                <h1>1</h1>
-                                <Button>-</Button>
-                            </div>
-                            <Button>Remove</Button>
-                        </div>
-
-                    </div>
-
-                    <div className=' p-2'>
-                        <div className='flex justify-between mb-4'>
-                            <h1>Coco Cola</h1>
-                            <h2>Rs.20</h2>
-                        </div>
-
-                        <div className='flex justify-between'>
-                            <div className='flex gap-2 items-center'>
-                                <Button>+</Button>
-                                <h1>1</h1>
-                                <Button>-</Button>
-                            </div>
-                            <Button>Remove</Button>
-                        </div>
-
-                    </div>
-
-                    <div className=' p-2'>
-                        <div className='flex justify-between mb-4'>
-                            <h1>Coco Cola</h1>
-                            <h2>Rs.20</h2>
-                        </div>
-
-                        <div className='flex justify-between'>
-                            <div className='flex gap-2 items-center'>
-                                <Button>+</Button>
-                                <h1>1</h1>
-                                <Button>-</Button>
-                            </div>
-                            <Button>Remove</Button>
-                        </div>
-
-                    </div>
-
-                    <div className=' p-2'>
-                        <div className='flex justify-between mb-4'>
-                            <h1>Coco Cola</h1>
-                            <h2>Rs.20</h2>
-                        </div>
-
-                        <div className='flex justify-between'>
-                            <div className='flex gap-2 items-center'>
-                                <Button>+</Button>
-                                <h1>1</h1>
-                                <Button>-</Button>
-                            </div>
-                            <Button>Remove</Button>
-                        </div>
-
-                    </div>
-
-                    <div className=' p-2'>
-                        <div className='flex justify-between mb-4'>
-                            <h1>Coco Cola</h1>
-                            <h2>Rs.20</h2>
-                        </div>
-
-                        <div className='flex justify-between'>
-                            <div className='flex gap-2 items-center'>
-                                <Button>+</Button>
-                                <h1>1</h1>
-                                <Button>-</Button>
-                            </div>
-                            <Button>Remove</Button>
-                        </div>
-
-                    </div>
-
-                </div >
-
-                <SheetFooter>
-                    <Button type="submit">Save changes</Button>
                     <SheetClose asChild>
                         <Button variant="outline">Close</Button>
                     </SheetClose>

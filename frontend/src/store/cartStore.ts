@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { CartItemType, CartResponseType, AddToCartRequest } from '../types/cart_types';
+import { CartItemType, AddToCartRequest } from '../types/cart_types';
 import { addToCart, clearCart, getCart, removeFromCart } from '../services/cart_api';
 
 
