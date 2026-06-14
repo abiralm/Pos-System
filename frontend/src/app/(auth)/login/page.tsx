@@ -30,8 +30,8 @@ const Login = () => {
     }, [api])
 
     return (
-        <div className='grid grid-cols-2 '>
-            <div className=' flex flex-col items-center justify-center'>
+        <div className='grid grid-cols-5'>
+            <div className='col-span-3 flex flex-col items-center justify-center'>
                 <div className="mx-auto max-w-lg">
                     {/* <Carousel setApi={setApi} className="w-full max-w-md">
                         <CarouselContent>
@@ -39,8 +39,8 @@ const Login = () => {
                                 <CarouselItem key={index}>
                                     <Card className="m-px">
                                         <CardContent className="flex aspect-square items-center justify-center p-6"> */}
-                                            <Image src="/3.svg" alt=""  width={800} height={800}/>
-                                        {/* </CardContent>
+                    <Image src="/3.svg" alt="" width={800} height={800} />
+                    {/* </CardContent>
                                     </Card>
                                 </CarouselItem>
                             ))}
@@ -50,7 +50,9 @@ const Login = () => {
                     </Carousel> */}
                 </div>
             </div>
-            <LoginCard />
+            <div className='col-span-2'>
+                <LoginCard />
+            </div>
         </div>
 
     )
