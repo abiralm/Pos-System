@@ -9,8 +9,8 @@ import { Input } from "@/components/ui/input"
 
 export function LoginCard() {
     return (
-        <div className="h-screen flex items-center justify-center">
-            <div className="flex flex-col w-full max-w-md p-8 border-2 border-red-500 rounded-lg shadow-lg">
+        <div className="h-screen flex items-center justify-center  bg-gray-100">
+            <div className="flex flex-col w-full max-w-md p-8 border-2 border-gray-600 rounded-lg shadow-lg">
                 
                 <div className="mb-8">
                     <h1 className="text-4xl font-bold mb-2">
