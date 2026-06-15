@@ -1,18 +1,38 @@
+"use client'"
+
 import { Button } from "@/components/ui/button"
-import {
-    Field,
-    FieldDescription,
-    FieldGroup,
-    FieldLabel,
-} from "@/components/ui/field"
+import { Field, FieldGroup } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
+import { useRouter } from "next/navigation"
+import { useAuthStore } from "@/src/store/authStore";
 
 export function LoginCard() {
+    const [username, setUsername] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
     const [showPassword, setShowPassword] = useState(false);
+    const [error, setError] = useState("")
+    const [isLoading, setIsLoading] = useState(false)
+
+    const login = useAuthStore((s) => s.login)
+    const router = useRouter()
+
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword)
+    }
+
+    const handleLogin = async () => {
+        setError("")
+        setIsLoading(true)
+        try {
+            await login(username, password)
+            router.push("/catalog")
+        } catch (e: any) {
+            setError(e?.response?.data?.detail || "Invalid username or password")
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     return (
@@ -30,7 +50,7 @@ export function LoginCard() {
 
                 <FieldGroup className="-space-y-1">
                     <Field>
-                        <Input placeholder="Username" />
+                        <Input placeholder="Username" onChange={(e) => setUsername(e.target.value)}/>
                     </Field>
 
                     <Field>
@@ -39,6 +59,9 @@ export function LoginCard() {
                                 type={showPassword ? "text" : "password"}
                                 placeholder="Password"
                                 className="pr-10"
+                                onChange={(e) => setPassword(e.target.value)}
+                                disabled={isLoading}
+                                onKeyDown={(e) => e.key === "Enter" && handleLogin()}
                             />
 
                             {!showPassword ? (
@@ -57,8 +80,8 @@ export function LoginCard() {
                         </div>
                     </Field>
 
-                    <Button className="w-full p-5">
-                        Login
+                    <Button className="w-full p-5" type="submit" onClick={handleLogin}>
+                        {isLoading ? "Logging in..." : "Login"}
                     </Button>
                 </FieldGroup>
             </div>

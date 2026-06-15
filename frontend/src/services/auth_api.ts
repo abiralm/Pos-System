@@ -14,7 +14,7 @@ export const login = async (data: LoginRequest): Promise<LoginResponse> => {
 
 export const logout = async (refreshToken:string): Promise<string> => {
     try {
-        const response = await axiosInstance.post("auth/logout/",refreshToken);
+        const response = await axiosInstance.post("auth/logout/",{ refresh: refreshToken });
         console.log("Response data:", response.data);
         return response.data;
     } catch (error) {

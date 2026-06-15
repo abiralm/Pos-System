@@ -11,12 +11,16 @@ import { Tabs } from "radix-ui";
 import { TaskFilters } from "./_components/TaskFilters";
 import { CartSheet } from "./_components/CartSheet";
 import CartTest from "./_components/Cart";
+import { useAuthStore } from "@/src/store/authStore";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
 
   const [products, setProducts] = useState<ProductListType[]>([])
   const [searchQuery, setSearchQuery] = useState<String>("")
   const [selectedCategory, setSelectedCategory] = useState<String[]>(["All"]);
+  const logout = useAuthStore((s) => s.logout)
+  const router = useRouter()
 
 
   useEffect(() => {
@@ -30,13 +34,25 @@ export default function Home() {
     fetchProducts();
   }, []);
 
+  const handleLogout = async () => {
+    try {
+      await logout()
+      router.push("/")
+    } catch (e: any) {
+      console.log("Invalid username or password")
+    }
+  }
+
   return (
     <main className="m-6">
-      
+
       <div className="w-full flex flex-col gap-4 p-2 m-2">
-        
+
         <SearchBar />
         <TaskFilters />
+        <Button className="w-full p-5" type="submit" onClick={handleLogout}>
+          Logout
+        </Button>
       </div>
 
       <div className="p-2 m-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -75,8 +91,8 @@ export default function Home() {
           ))}
       </div>
 
-      <CartSheet/>
-      <CartTest/>
+      <CartSheet />
+      <CartTest />
 
     </main>
   );
