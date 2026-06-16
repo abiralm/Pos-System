@@ -13,6 +13,7 @@ import { CartSheet } from "./_components/CartSheet";
 import CartTest from "./_components/Cart";
 import { useAuthStore } from "@/src/store/authStore";
 import { useRouter } from "next/navigation";
+import { LogOut } from "lucide-react";
 
 export default function Home() {
 
@@ -47,20 +48,24 @@ export default function Home() {
     <main className="m-6">
 
       <div className="w-full flex flex-col gap-4 p-2 m-2">
-
-        <SearchBar />
+        <div className="flex justify-between">
+          <SearchBar />
+          <Button className="p-2" type="submit" onClick={handleLogout} asChild>
+            <LogOut className="w-8"/>
+          </Button>
+        </div>
         <TaskFilters />
-        <Button className="w-full p-5" type="submit" onClick={handleLogout}>
-          Logout
-        </Button>
+
       </div>
 
       <div className="p-2 m-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
 
+        <div className="col-span-1 md:col-span-2 lg:col-span-4 text-5xl font-bold">All Items</div>
+
         {/* renders cards */}
         {products &&
           products.map((product) => (
-            <Card key={product.id} className="overflow-hidden rounded-xl pt-0">
+            <Card key={product.id} className="overflow-hidden rounded-xl pt-0 border-0">
               <CardContent className="p-0">
                 <div className="h-64 w-full">
                   <img
@@ -92,7 +97,7 @@ export default function Home() {
       </div>
 
       <CartSheet />
-      <CartTest />
+      {/* <CartTest /> */}
 
     </main>
   );
