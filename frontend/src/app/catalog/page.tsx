@@ -50,9 +50,6 @@ export default function Home() {
       <div className="w-full flex flex-col gap-4 p-2 m-2">
         <div className="flex justify-between">
           <SearchBar />
-          <Button className="p-2" type="submit" onClick={handleLogout} asChild>
-            <LogOut className="w-8"/>
-          </Button>
         </div>
         <TaskFilters />
 
