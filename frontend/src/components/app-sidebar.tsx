@@ -6,7 +6,7 @@ import {
     SidebarHeader,
     SidebarFooter
 } from "@/components/ui/sidebar"
-import { LogOut, ShoppingBasket, ShoppingCart } from "lucide-react"
+import { LogOut, ShoppingCart } from "lucide-react"
 
 export function AppSidebar() {
     return (
