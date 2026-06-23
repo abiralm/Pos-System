@@ -13,10 +13,12 @@ import {
 import { Button } from '@/components/ui/button'
 import { useCartStore } from '@/src/store/cartStore'
 import { useEffect } from "react"
+import { useRouter } from "next/navigation"
 
 export const CartSheet = () => {
 
     const { items, cartTotal, cartCount, fetchCart, addItem, removeItem, clearItems } = useCartStore()
+    const router = useRouter()
 
     useEffect(() => {
         fetchCart()
@@ -85,6 +87,16 @@ export const CartSheet = () => {
                         <span>Total:</span>
                         <span>Rs.{cartTotal}</span>
                     </div>
+
+                    <SheetClose asChild>
+                        <Button
+                            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2"
+                            onClick={() => router.push("/checkout")}
+                            disabled={cartCount === 0}
+                        >
+                            Checkout
+                        </Button>
+                    </SheetClose>
 
                     <Button
                         variant="destructive"
