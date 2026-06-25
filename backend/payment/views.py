@@ -28,12 +28,30 @@ class PaymentView(APIView):
         if order.payments.filter(status='pending').exists():
             return Response({"error": "A pending payment already exists for this order"}, status=400)            
 
-        #stripe session data
+        if method == 'cash':
+            payment = Payment.objects.create(
+                order=order,
+                method=method,
+                amount=order.get_grand_total(),
+                status='completed'
+            )
+            order.status = 'paid'
+            order.save()
+            return Response({
+                "message": "Payment successful (Cash)",
+                "payment_id": payment.id,
+                "checkout_url": None
+            })
+
+        # Stripe session data for Card payment
+        success_url = f"{settings.FRONTEND_URL}/payment/success?session_id={{CHECKOUT_SESSION_ID}}"
+        cancel_url = f"{settings.FRONTEND_URL}/payment/cancel"
+
         session_data = stripe.checkout.Session.create(
             mode='payment',
             client_reference_id=order_id,
-            success_url='http://localhost:8000/api/payment/success/',
-            cancel_url='http://localhost:8000/api/payment/cancel/',
+            success_url=success_url,
+            cancel_url=cancel_url,
             payment_method_types=['card'],
             line_items=[
                 {
