@@ -5,7 +5,7 @@ import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader,
 import { getProducts } from "@/src/services/api";
 import { ProductListType } from "@/src/types/product_types";
 import Link from "next/link";
-import { useMemo, useRef, useState, useEffect } from "react";
+import { useMemo, useRef, useState, useEffect, useCallback } from "react";
 import { SearchBar } from "./_components/SearchBar";
 import { Tabs } from "radix-ui";
 import { TaskFilters } from "./_components/TaskFilters";
@@ -14,15 +14,51 @@ import CartTest from "./_components/Cart";
 import { useAuthStore } from "@/src/store/authStore";
 import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
+import { useCartStore } from "@/src/store/cartStore";
 
 export default function Home() {
 
   const [products, setProducts] = useState<ProductListType[]>([])
-  const [searchQuery, setSearchQuery] = useState<String>("")
-  const [selectedCategory, setSelectedCategory] = useState<String[]>(["All"]);
+  const [searchQuery, setSearchQuery] = useState<string>("")
+  const [selectedCategory, setSelectedCategory] = useState<string[]>(["All"]);
   const logout = useAuthStore((s) => s.logout)
   const router = useRouter()
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { items, cartTotal, cartCount, fetchCart, addItem, removeItem, clearItems } = useCartStore()
 
+  const fetchProducts = useCallback(async (query?: string) => {
+    try {
+      const response = await getProducts(query);
+      if (response) setProducts(response);
+    } catch (e) {
+      console.error("Failed to fetch products", e);
+    }
+  }, []);
+
+  // initial load
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
+
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+
+    if (value === "") {
+      fetchProducts();
+      return;
+    }
+
+    debounceRef.current = setTimeout(() => {
+      fetchProducts(value);
+    }, 400);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -49,7 +85,11 @@ export default function Home() {
 
       <div className="w-full flex flex-col gap-4 p-2 m-2">
         <div className="flex justify-between">
-          <SearchBar />
+          <SearchBar
+            value={searchQuery}
+            onChange={handleSearchChange}
+            onSearch={() => fetchProducts(searchQuery)}
+          />
         </div>
         <TaskFilters />
 
@@ -86,7 +126,9 @@ export default function Home() {
               </CardHeader>
 
               <CardFooter className="flex gap-2">
-                <Button asChild className="bg-emerald-700"><Link href=''>Add to Cart</Link></Button>
+                {/* <Button asChild className="bg-emerald-700"><Link href=''>Add to Cart</Link></Button> */}
+                <Button asChild className="bg-emerald-700" onClick={() => addItem({ product_id: product.id, quantity: '1' })}
+                ><Link href=''>Add to Cart</Link></Button>
                 <Button asChild className="bg-blue-500"><Link href={`catalog/${product.slug}`}>Details</Link></Button>
               </CardFooter>
             </Card>
