@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.postgres.indexes import GinIndex
+
 
 # Create your models here.
 class Category (models.Model):
@@ -37,6 +39,16 @@ class Product(models.Model):
             models.Index(fields=['name']),
             models.Index(fields=['-created']),
             models.Index(fields=['id','slug']),
+            GinIndex(
+                fields=['name'],
+                name='product_name_trgm_idx',
+                opclasses=['gin_trgm_ops'],
+            ),
+            GinIndex(
+                fields=['description'],
+                name='product_desc_trgm_idx',
+                opclasses=['gin_trgm_ops'],
+            ),
         ]
 
     def __str__(self):
