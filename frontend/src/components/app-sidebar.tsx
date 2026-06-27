@@ -11,7 +11,7 @@ import { LogOut, ShoppingCart } from "lucide-react"
 export function AppSidebar() {
     return (
         <Sidebar className="">
-            <SidebarHeader className="mt-2 mb-1 border-b-2 border-red-500">
+            <SidebarHeader className="mt-2 mb-1 border-b-2 border-emerald-600">
                 <div className="flex justify-between gap-4 rounded-4xl px-2 items-baseline">
                     <h1 className="text-xl font-bold">POS System</h1>
                     <ShoppingCart className="w-8" />
@@ -23,10 +23,10 @@ export function AppSidebar() {
                     <SidebarGroupContent>
                         <SidebarMenu>
                             <SidebarMenuItem className="my-2">
-                                <SidebarMenuButton className="border-2 bg-amber-100">Dashboard</SidebarMenuButton>
-                                <SidebarMenuButton className="border-2 bg-amber-100">Catalog</SidebarMenuButton>
-                                <SidebarMenuButton className="border-2 bg-amber-100">Bills</SidebarMenuButton>
-                                <SidebarMenuButton className="border-2 bg-amber-100">Settings</SidebarMenuButton>
+                                <SidebarMenuButton className="hover:bg-emerald-600 ">Dashboard</SidebarMenuButton>
+                                <SidebarMenuButton className="hover:bg-emerald-600">Catalog</SidebarMenuButton>
+                                <SidebarMenuButton className="hover:bg-emerald-600">Bills</SidebarMenuButton>
+                                <SidebarMenuButton className="hover:bg-emerald-600">Settings</SidebarMenuButton>
                             </SidebarMenuItem>
                         </SidebarMenu>
                     </SidebarGroupContent>
@@ -34,7 +34,7 @@ export function AppSidebar() {
             </SidebarContent>
 
             <SidebarFooter className="my-2">
-                <div className="flex justify-between border-2 rounded-4xl px-4 py-2 items-center">
+                <div className="flex justify-between border-2 rounded-4xl px-4 py-2 items-center hover:bg-emerald-600">
                     Log Out
                     <Button className="p-2" type="submit" asChild>
                         <LogOut className="w-8" />
