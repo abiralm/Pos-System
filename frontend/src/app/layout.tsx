@@ -3,7 +3,7 @@ import { Inter } from "next/font/google"
 
 const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-sans",  // 👈 must match what globals.css expects
+  variable: "--font-sans",
 })
 
 export default function Layout({ children }: { children: React.ReactNode }) {
