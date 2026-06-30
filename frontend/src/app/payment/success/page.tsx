@@ -7,23 +7,63 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle2, Home, ShoppingBag, ArrowRight, Clipboard } from "lucide-react";
 import Link from "next/link";
+import { verifyPayment } from "@/src/services/payment_api";
 
 function SuccessContent() {
-    const router = useRouter();
     const searchParams = useSearchParams();
     const { clearItems } = useCartStore();
+
     const [sessionId, setSessionId] = useState<string | null>(null);
+    const [status, setStatus] = useState<"loading" | "verified" | "failed">("loading");
+    const [errorMsg, setErrorMsg] = useState<string | null>(null);
     const [copied, setCopied] = useState(false);
 
     useEffect(() => {
-        // Clear the cart on successful payment redirect
-        clearItems();
-
         const session = searchParams.get("session_id");
-        if (session) {
-            setSessionId(session);
+        if (!session) {
+            setStatus("failed");
+            setErrorMsg("No session ID found in URL.");
+            return;
         }
-    }, [searchParams, clearItems]);
+        setSessionId(session);
+
+        const verify = async () => {
+            try {
+                const res = await verifyPayment(session);
+                if (res.verified) {
+                    clearItems();
+                    setStatus("verified");
+                } else {
+                    setStatus("failed");
+                    setErrorMsg(res.error || "Payment could not be verified.");
+                }
+            } catch (err: any) {
+                // 202 means webhook hasn't fired yet — retry once after delay
+                if (err.response?.status === 202) {
+                    setTimeout(async () => {
+                        try {
+                            const retry = await verifyPayment(session);
+                            if (retry.verified) {
+                                clearItems();
+                                setStatus("verified");
+                            } else {
+                                setStatus("failed");
+                                setErrorMsg("Payment not confirmed. Please contact support.");
+                            }
+                        } catch {
+                            setStatus("failed");
+                            setErrorMsg("Payment not confirmed. Please contact support.");
+                        }
+                    }, 3000);
+                } else {
+                    setStatus("failed");
+                    setErrorMsg(err.response?.data?.error || "Verification failed.");
+                }
+            }
+        };
+
+        verify();
+    }, [searchParams]);
 
     const handleCopy = () => {
         if (sessionId) {
@@ -33,10 +73,39 @@ function SuccessContent() {
         }
     };
 
+    if (status === "loading") {
+        return (
+            <div className="min-h-screen flex items-center justify-center p-6">
+                <p className="text-slate-500 dark:text-slate-400">Verifying your payment...</p>
+            </div>
+        );
+    }
+
+    if (status === "failed") {
+        return (
+            <div className="min-h-screen flex items-center justify-center p-6">
+                <Card className="max-w-md w-full text-center shadow-xl border-slate-200/50">
+                    <CardHeader>
+                        <CardTitle className="text-rose-600">Payment Not Verified</CardTitle>
+                        <CardDescription>{errorMsg}</CardDescription>
+                    </CardHeader>
+                    <CardFooter className="justify-center gap-3">
+                        <Button asChild variant="outline">
+                            <Link href="/catalog">Go to Catalog</Link>
+                        </Button>
+                        <Button asChild className="bg-rose-600 hover:bg-rose-700 text-white">
+                            <Link href="/checkout">Retry Payment</Link>
+                        </Button>
+                    </CardFooter>
+                </Card>
+            </div>
+        );
+    }
+
     return (
         <div className="min-h-screen flex items-center justify-center p-6">
             <Card className="max-w-xl w-full shadow-2xl border-slate-200/50 bg-white/80 overflow-hidden pt-0!">
-                
+
                 <div className="bg-emerald-600 dark:bg-emerald-700 py-8 flex flex-col items-center justify-center text-white">
                     <div className="p-3 bg-white/10 rounded-full mb-3 ">
                         <CheckCircle2 className="w-16 h-16 text-white" />
@@ -87,7 +156,7 @@ function SuccessContent() {
                             <Home className="w-4 h-4" /> Catalog Dashboard
                         </Link>
                     </Button>
-                    
+
                     <Button asChild className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-2">
                         <Link href="/catalog">
                             Shop More <ArrowRight className="w-4 h-4" />

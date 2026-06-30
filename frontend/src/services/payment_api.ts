@@ -24,3 +24,16 @@ export const processPayment = async (data: PaymentRequest): Promise<PaymentRespo
         throw error;
     }
 };
+
+// payment_api.ts
+
+export const verifyPayment = async (sessionId: string) => {
+    try {
+        const response = await axiosInstance.get(`/api/payments/success/?session_id=${sessionId}`);
+        return response.data;
+
+    } catch (error) {
+        console.error("Error during verification:", error);
+        throw error;
+    }
+};
