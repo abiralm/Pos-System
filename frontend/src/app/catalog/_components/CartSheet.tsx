@@ -48,26 +48,11 @@ export const CartSheet = () => {
 
                                 <div className='flex justify-between'>
                                     <div className='flex gap-2 items-center'>
-                                        {/* + button */}
-                                        <Button
-                                            size="sm"
-                                            onClick={() => addItem({ product_id: item.product_id, quantity: '1' })}
-                                        >
-                                            +
-                                        </Button>
-
-                                        <span>{item.quantity}</span>
-
-                                        {/* - button */}
-                                        <Button
-                                            size="sm"
-                                            onClick={() => removeItem(String(item.product_id), 1)}
-                                        >
-                                            -
-                                        </Button>
+                                        <Button size="sm" onClick={() => addItem({ product_id: item.product_id, quantity: '1' })}>+</Button>
+                                            <span>{item.quantity}</span>
+                                        <Button size="sm" onClick={() => removeItem(String(item.product_id), 1)}>-</Button>
                                     </div>
 
-                                    {/* Remove entire item */}
                                     <Button
                                         variant="destructive"
                                         size="sm"
