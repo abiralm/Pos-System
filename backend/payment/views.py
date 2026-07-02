@@ -1,5 +1,6 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from rest_framework.views import APIView
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from config import settings
 from .serializers import PaymentSerializer
@@ -76,9 +77,7 @@ class PaymentView(APIView):
             stripe_id = session_data.id
         )
 
-        return Response({
-            "checkout_url": session_data.url
-        })
+        return Response({"checkout_url": session_data.url})
         # payment.save()
 
         # order.status = 'paid'
@@ -89,9 +88,37 @@ class PaymentView(APIView):
         #     "payment_id": payment.id
         # },status=status.HTTP_200_OK)
 
+# def payment_success(request):
+#     return HttpResponse("Payment successful! You can close this page.")
+@csrf_exempt
 def payment_success(request):
-    return HttpResponse("Payment successful! You can close this page.")
+    session_id = request.GET.get("session_id")
 
+    if not session_id:
+        return JsonResponse({"verified": False, "error": "Missing session_id"}, status=400)
+
+    try:
+        session = stripe.checkout.Session.retrieve(session_id)
+    except stripe.error.InvalidRequestError:
+        return JsonResponse({"verified": False, "error": "Invalid session ID"}, status=400)
+
+    if session.payment_status != "paid":
+        return JsonResponse({"verified": False, "error": "Payment not completed"}, status=402)
+
+    try:
+        order_id = session.metadata["order_id"]
+        order = Order.objects.get(id=order_id)
+        payment = order.payments.get(stripe_id=session_id, status="completed")
+    except (Order.DoesNotExist, Payment.DoesNotExist):
+        # Stripe confirms paid but webhook hasn't updated DB yet
+        return JsonResponse({"verified": False, "error": "Payment record not confirmed yet"}, status=202)
+
+    return JsonResponse({
+        "verified": True,
+        "status": payment.status,
+        "order_id": order.id,
+        "amount": str(payment.amount),
+    })
 
 def payment_cancel(request):
     return HttpResponse("Payment canceled.")

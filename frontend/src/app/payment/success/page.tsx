@@ -30,12 +30,12 @@ function SuccessContent() {
         const verify = async () => {
             try {
                 const res = await verifyPayment(session);
-                if (res.verified) {
+                if (res.status === 'completed') {
                     clearItems();
                     setStatus("verified");
                 } else {
                     setStatus("failed");
-                    setErrorMsg(res.error || "Payment could not be verified.");
+                    setErrorMsg("Payment is " + res.status + " and could not be verified yet.");
                 }
             } catch (err: any) {
                 // 202 means webhook hasn't fired yet — retry once after delay
@@ -43,7 +43,7 @@ function SuccessContent() {
                     setTimeout(async () => {
                         try {
                             const retry = await verifyPayment(session);
-                            if (retry.verified) {
+                            if (retry.status === 'completed') {
                                 clearItems();
                                 setStatus("verified");
                             } else {

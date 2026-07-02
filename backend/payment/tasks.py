@@ -28,7 +28,7 @@ def notify_payment(order_id):
     subject= f"Invoice for Order :{order_id}",
     body=f"Please find the invoice of your order: Order {order_id}",
     from_email=settings.EMAIL_HOST_USER,
-    to=[order.email]
+    to=['abiral.brainztechs@gmail.com']
     )
 
     email.attach(f'order_{order.id}.pdf', pdf_buffer.getvalue(), 'application/pdf')
