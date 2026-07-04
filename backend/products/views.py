@@ -11,7 +11,7 @@ from django.db.models.functions import Greatest
 class ProductListView(generics.ListAPIView):
     serializer_class = ProductSerializer
     filter_backends=[DjangoFilterBackend]
-    filterset_fields = ['category', 'available']
+    filterset_fields = ['category', 'available', 'stock']
     
     def get_queryset(self):
         qs = Product.objects.all()
