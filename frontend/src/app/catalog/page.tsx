@@ -11,7 +11,7 @@ import { TaskFilters } from "./_components/TaskFilters";
 import { CartSheet } from "./_components/CartSheet";
 import { useAuthStore } from "@/src/store/authStore";
 import { useRouter } from "next/navigation";
-import { LogOut } from "lucide-react";
+import { Badge } from "@/components/ui/badge"
 import { useCartStore } from "@/src/store/cartStore";
 
 export default function Home() {
@@ -102,13 +102,15 @@ export default function Home() {
           products.map((product) => (
             <Card key={product.id} className="overflow-hidden rounded-xl pt-0 border-0">
               <CardContent className="p-0">
-                <div className="h-64 w-full">
+                <div className="h-64 w-full relative">
                   <img
                     src="/6318.png"
                     alt="Coca Cola"
-                    className="h-full w-full object-cover"
+                    className="h-full w-full object-cover relative"
                   />
+                  <Badge className="rounded-2xl absolute z-10 top-2 right-2">In Stock: {product.stock}</Badge>
                 </div>
+
               </CardContent>
 
               <CardHeader>

@@ -24,8 +24,8 @@ class Product(models.Model):
     slug = models.SlugField(max_length=200,unique=True)
     description  = models.TextField(blank = True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    stock = models.PositiveIntegerField() # this may not be neede as available filed is used
-    available = models.BooleanField(default=True)
+    stock = models.PositiveIntegerField(default=0)
+    available = models.BooleanField(default=False)  # auto-managed via save()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True) # may not be necessary
     image= models.ImageField(
@@ -50,6 +50,11 @@ class Product(models.Model):
                 opclasses=['gin_trgm_ops'],
             ),
         ]
+
+    def save(self, *args, **kwargs):
+        # Keep `available` in sync with stock automatically
+        self.available = self.stock > 0
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
