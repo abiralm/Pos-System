@@ -39,7 +39,7 @@ const Login = () => {
                                 <CarouselItem key={index}>
                                     <Card className="m-px">
                                         <CardContent className="flex aspect-square items-center justify-center p-6"> */}
-                    <Image src="/3.svg" alt="" width={800} height={800} />
+                    <Image src="/3.png" alt="" width={800} height={800} />
                     {/* </CardContent>
                                     </Card>
                                 </CarouselItem>

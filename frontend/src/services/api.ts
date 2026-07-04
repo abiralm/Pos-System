@@ -4,7 +4,7 @@ import { axiosInstance } from "./instance";
 export const getProducts = async (query?: string): Promise<ProductListType[]> => {
     try {
         const params = query ? { search: query } : {};
-        const response = await axiosInstance.get(`/api/products/`, { params });
+        const response = await axiosInstance.get(`/api/products/?available=true`, { params });
         return response.data;
     } catch (error) {
         console.error("Error fetching products:", error);
