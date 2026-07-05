@@ -1,7 +1,7 @@
 
 from django.db.models import prefetch_related_objects
 
-from backend.products.models import Product
+from products.models import Product
 from .models import Order, OrderItem
 from django.db import transaction
 
