@@ -12,7 +12,7 @@ from config import settings
 #task to send pdf by email when order is completed
 @shared_task
 def notify_payment(order_id):
-    order = Order.objects.get(id=order_id)
+    order = Order.objects.prefetch_related('items__product').get(id=order_id)
 
     html = render_to_string('orders/order/pdf.html', {
         'order': order

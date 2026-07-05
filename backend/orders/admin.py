@@ -41,6 +41,7 @@ export_to_csv.short_description = 'Export to CSV'
 class OrderAdmin(admin.ModelAdmin):
     list_display = [
         'id',
+        'user',
         'customer_name',
         'email',
         'status',
@@ -48,9 +49,8 @@ class OrderAdmin(admin.ModelAdmin):
         'tax',
         'created',
         'updated',
-
     ]
-    list_filter = ['status','created','updated']
+    list_filter = ['status', 'user', 'created', 'updated']
     inlines = [OrderItemInline]
     actions=[export_to_csv]
 

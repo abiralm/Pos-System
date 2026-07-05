@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from products.models import Product
 
@@ -7,13 +8,19 @@ STATUS_CHOICES = [
     ('cancelled','Cancelled')
 ]
 
-class Order( models.Model):
-    customer_name= models.CharField(max_length=50)
+class Order(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='orders'
+    )
+    customer_name = models.CharField(max_length=50)
     email = models.EmailField()
-    #may ned to add phone address fields
-    status  = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True) 
+    updated = models.DateTimeField(auto_now=True)
     discount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     tax = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
@@ -33,8 +40,13 @@ class Order( models.Model):
         return f'Order {self.id}'
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order,related_name='items',on_delete=models.CASCADE)
-    product =models.ForeignKey(Product, related_name='order_items', on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        Product,
+        related_name='order_items',
+        on_delete=models.SET_NULL,  # preserve order history if product is deleted
+        null=True
+    )
     product_name = models.CharField(max_length=255,default='')  
     price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField(default=1)
