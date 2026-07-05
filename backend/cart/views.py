@@ -29,7 +29,6 @@ def add_to_cart(request):
 def remove_from_cart(request):
     cart = Cart(request)
     product_id = request.data.get('product_id')
-    quantity = int(request.data.get('quantity'))
     quantity = request.data.get('quantity')
 
     if quantity is None:

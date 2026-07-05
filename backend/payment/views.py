@@ -34,6 +34,7 @@ class PaymentView(APIView):
                 order=order,
                 method=method,
                 amount=order.get_grand_total(),
+                stripe_id=None,
                 status='completed'
             )
             order.status = 'paid'

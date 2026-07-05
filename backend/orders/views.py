@@ -10,7 +10,7 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from xhtml2pdf import pisa
 from django.shortcuts import get_object_or_404
-from .models import Order
+from .models import Order, OrderItem
 
 
 class CheckoutView(APIView):
@@ -25,7 +25,12 @@ class CheckoutView(APIView):
         serializer = CheckoutSerializer(data= request.data)
         serializer.is_valid(raise_exception=True)
 
-        order = create_order_from_cart(cart,serializer.validated_data['customer_name'],serializer.validated_data['email'])
+        order = create_order_from_cart(
+            cart,
+            serializer.validated_data['customer_name'],
+            serializer.validated_data['email'],
+            user=request.user
+        )
         cart.clear_cart()
 
         return Response({
@@ -36,7 +41,7 @@ class CheckoutView(APIView):
 
 
 def generate_order_pdf(request, order_id):
-    order = get_object_or_404(Order, id=order_id)
+    order = get_object_or_404(Order.objects.prefetch_related('items__product'), id=order_id)
 
     html = render_to_string('orders/order/pdf.html', {
         'order': order
