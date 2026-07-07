@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button'
 import { useCartStore } from '@/src/store/cartStore'
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { Minus, Plus } from "lucide-react"
 
 export const CartSheet = () => {
 
@@ -29,7 +30,7 @@ export const CartSheet = () => {
             <SheetTrigger asChild><Button variant="outline">Cart ({cartCount})</Button></SheetTrigger>
             <SheetContent className="flex flex-col">
                 <SheetHeader>
-                    <SheetTitle>Cart</SheetTitle>
+                    <SheetTitle className="text-2xl font-bold">Cart</SheetTitle>
                     <SheetDescription>
                         {cartCount} item(s) in your cart
                     </SheetDescription>
@@ -47,10 +48,10 @@ export const CartSheet = () => {
                                 </div>
 
                                 <div className='flex justify-between'>
-                                    <div className='flex gap-2 items-center'>
-                                        <Button size="sm" onClick={() => addItem({ product_id: item.product_id, quantity: '1' })}>+</Button>
-                                            <span>{item.quantity}</span>
-                                        <Button size="sm" onClick={() => removeItem(String(item.product_id), 1)}>-</Button>
+                                    <div className='flex gap-4 items-center'>
+                                        <Button size="icon" className="rounded-2xl" onClick={() => addItem({ product_id: item.product_id, quantity: '1' })}><Minus /></Button>
+                                        <span className=" text-md font-bold">{item.quantity}</span>
+                                        <Button size="icon" className="rounded-2xl" onClick={() => removeItem(String(item.product_id), 1)}><Plus /></Button>
                                     </div>
 
                                     <Button
@@ -68,9 +69,9 @@ export const CartSheet = () => {
 
                 {/* Footer */}
                 <SheetFooter className='flex flex-col gap-2'>
-                    <div className='flex justify-between font-semibold text-lg'>
+                    <div className='flex justify-between font-semibold text-lg bg-gray-200 p-2 rounded-md'>
                         <span>Total:</span>
-                        <span>Rs.{cartTotal}</span>
+                        <span>Rs. {cartTotal}</span>
                     </div>
 
                     <SheetClose asChild>
@@ -79,7 +80,7 @@ export const CartSheet = () => {
                             onClick={() => router.push("/checkout")}
                             disabled={cartCount === 0}
                         >
-                            Checkout
+                            Process Transaction
                         </Button>
                     </SheetClose>
 
@@ -91,9 +92,9 @@ export const CartSheet = () => {
                         Clear Cart
                     </Button>
 
-                    <SheetClose asChild>
+                    {/* <SheetClose asChild>
                         <Button variant="outline">Close</Button>
-                    </SheetClose>
+                    </SheetClose> */}
                 </SheetFooter>
             </SheetContent>
 
