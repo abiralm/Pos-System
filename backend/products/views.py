@@ -7,11 +7,17 @@ from django.contrib.postgres.search import (SearchVector,SearchQuery,SearchRank)
 from django.contrib.postgres.search import TrigramSimilarity
 from django.db.models import Case, When, Value, FloatField
 from django.db.models.functions import Greatest
+from rest_framework.pagination import LimitOffsetPagination
+
+class CustomPagination(LimitOffsetPagination):
+    default_limit = 10
+    offset = 0
 
 class ProductListView(generics.ListAPIView):
     serializer_class = ProductSerializer
     filter_backends=[DjangoFilterBackend]
     filterset_fields = ['category', 'available', 'stock']
+    pagination_class= CustomPagination
     
     def get_queryset(self):
         qs = Product.objects.all()
