@@ -32,7 +32,6 @@ class CheckoutView(APIView):
             serializer.validated_data['email'],
             user=request.user
         )
-        cart.clear_cart()
 
         return Response({
             "message": "Order created successfully",
