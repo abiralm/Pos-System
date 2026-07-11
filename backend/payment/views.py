@@ -8,6 +8,8 @@ from .models import Payment
 from orders.models import Order
 import stripe
 from django.shortcuts import get_object_or_404
+from orders.services import complete_order
+
 
 #stripe instance
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -39,6 +41,9 @@ class PaymentView(APIView):
             )
             order.status = 'paid'
             order.save()
+            
+            complete_order(order)
+            
             return Response({
                 "message": "Payment successful (Cash)",
                 "payment_id": payment.id,
@@ -47,7 +52,7 @@ class PaymentView(APIView):
 
         # Stripe session data for Card payment
         success_url = f"{settings.FRONTEND_URL}/payment/success?session_id={{CHECKOUT_SESSION_ID}}"
-        cancel_url = f"{settings.FRONTEND_URL}/payment/cancel"
+        cancel_url = f"{settings.FRONTEND_URL}/payment/cancel?order_id={order.id}"
 
         session_data = stripe.checkout.Session.create(
             mode='payment',

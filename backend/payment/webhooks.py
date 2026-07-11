@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from orders.models import Order
 from .tasks import notify_payment 
+from orders.services import complete_order
 
 @csrf_exempt
 def stripe_webhook(request):
@@ -38,6 +39,9 @@ def stripe_webhook(request):
 
             order.status = 'paid'
             order.save()
+            
+            
+            complete_order(order)
 
             # Only fires once, since the second delivery never reaches this point
             notify_payment.delay(order_id)
