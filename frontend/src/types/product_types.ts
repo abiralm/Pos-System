@@ -17,3 +17,10 @@ export type ProductListType ={
     updated: string,
     image?: string
 }
+
+export type CatalogType ={
+    count:number,
+    next:string,
+    previous:string,
+    results: ProductListType[]
+}

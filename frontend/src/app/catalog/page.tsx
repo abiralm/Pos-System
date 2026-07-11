@@ -27,7 +27,7 @@ export default function Home() {
   const fetchProducts = useCallback(async (query?: string) => {
     try {
       const response = await getProducts(query);
-      if (response) setProducts(response);
+      if (response) setProducts(response.results);
     } catch (e) {
       console.error("Failed to fetch products", e);
     }
@@ -56,17 +56,6 @@ export default function Home() {
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, []);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const response = await getProducts();
-      if (response) {
-        console.log(response);
-        setProducts(response);
-      }
-    }
-    fetchProducts();
   }, []);
 
   const handleLogout = async () => {
