@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 import {
     Sidebar, SidebarContent, SidebarGroup,
     SidebarGroupContent, SidebarMenuItem, SidebarMenu,
@@ -23,10 +24,10 @@ export function AppSidebar() {
                     <SidebarGroupContent>
                         <SidebarMenu>
                             <SidebarMenuItem className="my-2">
-                                <SidebarMenuButton className="hover:bg-emerald-600 ">Dashboard</SidebarMenuButton>
-                                <SidebarMenuButton className="hover:bg-emerald-600">Catalog</SidebarMenuButton>
-                                <SidebarMenuButton className="hover:bg-emerald-600">Bills</SidebarMenuButton>
-                                <SidebarMenuButton className="hover:bg-emerald-600">Settings</SidebarMenuButton>
+                                <SidebarMenuButton className="hover:bg-emerald-600 " asChild><Link href="/">Dashboard</Link></SidebarMenuButton>
+                                <SidebarMenuButton className="hover:bg-emerald-600" asChild><Link href="/catalog">Catalog</Link></SidebarMenuButton>
+                                <SidebarMenuButton className="hover:bg-emerald-600" asChild><Link href="/orders">Orders</Link></SidebarMenuButton>
+                                <SidebarMenuButton className="hover:bg-emerald-600" asChild><Link href="/settings">Settings</Link></SidebarMenuButton>
                             </SidebarMenuItem>
                         </SidebarMenu>
                     </SidebarGroupContent>
