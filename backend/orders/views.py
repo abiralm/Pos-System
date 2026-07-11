@@ -1,9 +1,10 @@
 from rest_framework.decorators import APIView
+from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 
 from cart.cart import Cart
-from .serializers import CheckoutSerializer
+from .serializers import CheckoutSerializer, OrderSerializer
 from .services import create_order_from_cart
 
 from django.http import HttpResponse
@@ -38,6 +39,12 @@ class CheckoutView(APIView):
             "order_id": order.id,
             "total": order.get_grand_total()
         },status=status.HTTP_200_OK)
+
+
+class OrderListAPIView(generics.ListAPIView):
+    queryset = Order.objects.all().prefetch_related('items')
+    serializer_class = OrderSerializer
+    # permission_classes = [IsAuthenticated]
 
 
 def generate_order_pdf(request, order_id):
