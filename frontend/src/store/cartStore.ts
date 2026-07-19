@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { CartItemType, AddToCartRequest } from '../types/cart_types';
-import { addToCart, clearCart, getCart, removeFromCart } from '../services/cart_api';
+import { addToCart, clearCart, getCart, removeCartItem, updateCartItem } from '../services/cart_api';
 
 
 interface CartState {
@@ -16,7 +16,7 @@ interface CartState {
     clearItems: () => Promise<void>;
 }
 
-export const useCartStore = create<CartState>()((set) => ({
+export const useCartStore = create<CartState>()((set, get) => ({
     items: [],
     cartTotal: "0",
     cartCount: 0,
@@ -58,7 +58,17 @@ export const useCartStore = create<CartState>()((set) => ({
     removeItem: async (product_id: string, quantity: number) => {
         set({ loading: true, error: null });
         try {
-            await removeFromCart({ product_id, quantity });
+            const state = get();
+            const item = state.items.find(i => i.product_id.toString() === product_id.toString());
+            
+            if (item && quantity >= item.quantity) {
+                await removeCartItem(product_id);
+            } else if (item) {
+                await updateCartItem(product_id, { quantity: item.quantity - quantity });
+            } else {
+                await removeCartItem(product_id);
+            }
+
             const updated = await getCart();
             set({
                 items: updated.items,
