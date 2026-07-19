@@ -93,8 +93,8 @@ export default function Home() {
               <CardContent className="p-0">
                 <div className="h-64 w-full relative">
                   <img
-                    src="/6318.png"
-                    alt="Coca Cola"
+                    src="/chips.jpg"
+                    alt={product.name}
                     className="h-full w-full object-cover relative"
                   />
                   <Badge className="rounded-2xl absolute z-10 top-2 right-2">In Stock: {product.stock}</Badge>
