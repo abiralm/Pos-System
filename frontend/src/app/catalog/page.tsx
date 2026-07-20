@@ -13,6 +13,7 @@ import { useAuthStore } from "@/src/store/authStore";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge"
 import { useCartStore } from "@/src/store/cartStore";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 export default function Home() {
 
@@ -131,7 +132,7 @@ export default function Home() {
             </Card>
           ))}
 
-        <div className="flex justify-between items-center mt-6 col-span-1 md:col-span-2 lg:col-span-4">
+        <div className="flex justify-center gap-4 items-center mt-4 col-span-1 md:col-span-2 lg:col-span-4">
           <Button 
             disabled={offset === 0} 
             onClick={() => {
@@ -140,7 +141,7 @@ export default function Home() {
               fetchProducts(searchQuery, newOffset);
             }}
           >
-            Previous
+            <ArrowLeft/>
           </Button>
           <span className="font-medium text-gray-700">
             Showing {totalCount === 0 ? 0 : offset + 1} to {Math.min(offset + limit, totalCount)} of {totalCount}
@@ -153,7 +154,7 @@ export default function Home() {
               fetchProducts(searchQuery, newOffset);
             }}
           >
-            Next
+            <ArrowRight/>
           </Button>
         </div>
       </div>
