@@ -1,3 +1,9 @@
+export type  ProductQueryParamsType = {
+    search?: string;
+    limit?: number;
+    offset?: number;
+}
+
 export type categoryType ={
     id:string,
     name:string,
