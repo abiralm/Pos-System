@@ -19,15 +19,21 @@ export default function Home() {
   const [products, setProducts] = useState<ProductListType[]>([])
   const [searchQuery, setSearchQuery] = useState<string>("")
   const [selectedCategory, setSelectedCategory] = useState<string[]>(["All"]);
+  const [offset, setOffset] = useState<number>(0);
+  const limit = 10;
+  const [totalCount, setTotalCount] = useState<number>(0);
   const logout = useAuthStore((s) => s.logout)
   const router = useRouter()
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { items, cartTotal, cartCount, fetchCart, addItem, removeItem, clearItems } = useCartStore()
 
-  const fetchProducts = useCallback(async (query?: string) => {
+  const fetchProducts = useCallback(async (query?: string, currentOffset = 0) => {
     try {
-      const response = await getProducts(query);
-      if (response) setProducts(response.results);
+      const response = await getProducts(query, limit, currentOffset);
+      if (response) {
+        setProducts(response.results);
+        setTotalCount(response.count);
+      }
     } catch (e) {
       console.error("Failed to fetch products", e);
     }
@@ -43,12 +49,14 @@ export default function Home() {
     if (debounceRef.current) clearTimeout(debounceRef.current);
 
     if (value === "") {
-      fetchProducts();
+      setOffset(0);
+      fetchProducts(undefined, 0);
       return;
     }
 
     debounceRef.current = setTimeout(() => {
-      fetchProducts(value);
+      setOffset(0);
+      fetchProducts(value, 0);
     }, 400);
   };
 
@@ -122,11 +130,35 @@ export default function Home() {
               </CardFooter>
             </Card>
           ))}
+
+        <div className="flex justify-between items-center mt-6 col-span-1 md:col-span-2 lg:col-span-4">
+          <Button 
+            disabled={offset === 0} 
+            onClick={() => {
+              const newOffset = offset - limit;
+              setOffset(newOffset);
+              fetchProducts(searchQuery, newOffset);
+            }}
+          >
+            Previous
+          </Button>
+          <span className="font-medium text-gray-700">
+            Showing {totalCount === 0 ? 0 : offset + 1} to {Math.min(offset + limit, totalCount)} of {totalCount}
+          </span>
+          <Button 
+            disabled={offset + limit >= totalCount} 
+            onClick={() => {
+              const newOffset = offset + limit;
+              setOffset(newOffset);
+              fetchProducts(searchQuery, newOffset);
+            }}
+          >
+            Next
+          </Button>
+        </div>
       </div>
 
       <CartSheet />
-      {/* <CartTest /> */}
-
     </main>
   );
 }
