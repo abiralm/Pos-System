@@ -23,8 +23,6 @@ export default function Home() {
   const [offset, setOffset] = useState<number>(0);
   const limit = 10;
   const [totalCount, setTotalCount] = useState<number>(0);
-  const logout = useAuthStore((s) => s.logout)
-  const router = useRouter()
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { items, cartTotal, cartCount, fetchCart, addItem, removeItem, clearItems } = useCartStore()
 
@@ -67,14 +65,6 @@ export default function Home() {
     };
   }, []);
 
-  const handleLogout = async () => {
-    try {
-      await logout()
-      router.push("/")
-    } catch (e: any) {
-      console.log("Invalid username or password")
-    }
-  }
 
   return (
     <main className="m-6">

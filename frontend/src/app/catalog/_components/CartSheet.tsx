@@ -49,9 +49,9 @@ export const CartSheet = () => {
 
                                 <div className='flex justify-between'>
                                     <div className='flex gap-4 items-center'>
-                                        <Button size="icon" className="rounded-2xl" onClick={() => addItem({ product_id: item.product_id, quantity: '1' })}><Minus /></Button>
+                                        <Button size="icon" className="rounded-2xl" onClick={() => addItem({ product_id: item.product_id, quantity: '1' })}><Plus /></Button>
                                         <span className=" text-md font-bold">{item.quantity}</span>
-                                        <Button size="icon" className="rounded-2xl" onClick={() => removeItem(String(item.product_id), 1)}><Plus /></Button>
+                                        <Button size="icon" className="rounded-2xl" onClick={() => removeItem(String(item.product_id), 1)}><Minus /></Button>
                                     </div>
 
                                     <Button
@@ -69,9 +69,9 @@ export const CartSheet = () => {
 
                 {/* Footer */}
                 <SheetFooter className='flex flex-col gap-2'>
-                    <div className='flex justify-between font-semibold text-lg bg-gray-200 p-2 rounded-md'>
+                    <div className='flex justify-between  bg-gray-200 p-2 rounded-md items-baseline'>
                         <span>Total:</span>
-                        <span>Rs. {cartTotal}</span>
+                        <span className="font-semibold text-lg">Rs. {cartTotal}</span>
                     </div>
 
                     <SheetClose asChild>
