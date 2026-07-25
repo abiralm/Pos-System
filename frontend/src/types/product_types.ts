@@ -2,7 +2,6 @@ export type  ProductQueryParamsType = {
     search?: string;
     limit?: number;
     offset?: number;
-    category?: string;
 }
 
 export type categoryType ={

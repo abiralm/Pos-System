@@ -2,8 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { getCategories, getProducts } from "@/src/services/api";
-import { ProductListType, categoryType } from "@/src/types/product_types";
+import { getProducts } from "@/src/services/api";
+import { ProductListType } from "@/src/types/product_types";
 import Link from "next/link";
 import { useMemo, useRef, useState, useEffect, useCallback } from "react";
 import { SearchBar } from "./_components/SearchBar";
@@ -18,18 +18,17 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 export default function Home() {
 
   const [products, setProducts] = useState<ProductListType[]>([])
-  const [categories, setCategories] = useState<categoryType[]>([])
   const [searchQuery, setSearchQuery] = useState<string>("")
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string[]>(["All"]);
   const [offset, setOffset] = useState<number>(0);
   const limit = 10;
   const [totalCount, setTotalCount] = useState<number>(0);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { items, cartTotal, cartCount, fetchCart, addItem, removeItem, clearItems } = useCartStore()
 
-  const fetchProducts = useCallback(async (query?: string, currentOffset = 0, categoryId: string | null = null) => {
+  const fetchProducts = useCallback(async (query?: string, currentOffset = 0) => {
     try {
-      const response = await getProducts(query, limit, currentOffset, categoryId || undefined);
+      const response = await getProducts(query, limit, currentOffset);
       if (response) {
         setProducts(response.results);
         setTotalCount(response.count);
@@ -39,20 +38,10 @@ export default function Home() {
     }
   }, []);
 
-  const loadCategories = useCallback(async () => {
-    try {
-      const response = await getCategories();
-      setCategories(response);
-    } catch (e) {
-      console.error("Failed to fetch categories", e);
-    }
-  }, []);
-
   // initial load
   useEffect(() => {
-    loadCategories();
-    fetchProducts(searchQuery, 0, selectedCategory);
-  }, [fetchProducts, loadCategories]);
+    fetchProducts();
+  }, [fetchProducts]);
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
@@ -60,20 +49,14 @@ export default function Home() {
 
     if (value === "") {
       setOffset(0);
-      fetchProducts(undefined, 0, selectedCategory);
+      fetchProducts(undefined, 0);
       return;
     }
 
     debounceRef.current = setTimeout(() => {
       setOffset(0);
-      fetchProducts(value, 0, selectedCategory);
+      fetchProducts(value, 0);
     }, 400);
-  };
-
-  const handleSelectCategory = (categoryId: string | null) => {
-    setSelectedCategory(categoryId);
-    setOffset(0);
-    fetchProducts(searchQuery, 0, categoryId);
   };
 
   useEffect(() => {
@@ -91,20 +74,16 @@ export default function Home() {
           <SearchBar
             value={searchQuery}
             onChange={handleSearchChange}
-            onSearch={() => fetchProducts(searchQuery, offset, selectedCategory)}
+            onSearch={() => fetchProducts(searchQuery)}
           />
         </div>
-        <TaskFilters 
-            categories={categories}
-            selectedCategory={selectedCategory}
-            onSelectCategory={handleSelectCategory}
-        />
+        <TaskFilters />
 
       </div>
 
       <div className="p-2 m-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
 
-        <div className="col-span-1 md:col-span-2 lg:col-span-4 text-5xl font-bold">Items</div>
+        <div className="col-span-1 md:col-span-2 lg:col-span-4 text-5xl font-bold">All Items</div>
 
         {/* renders cards */}
         {products &&
@@ -149,7 +128,7 @@ export default function Home() {
             onClick={() => {
               const newOffset = offset - limit;
               setOffset(newOffset);
-              fetchProducts(searchQuery, newOffset, selectedCategory);
+              fetchProducts(searchQuery, newOffset);
             }}
           >
             <ArrowLeft/>
@@ -162,7 +141,7 @@ export default function Home() {
             onClick={() => {
               const newOffset = offset + limit;
               setOffset(newOffset);
-              fetchProducts(searchQuery, newOffset, selectedCategory);
+              fetchProducts(searchQuery, newOffset);
             }}
           >
             <ArrowRight/>

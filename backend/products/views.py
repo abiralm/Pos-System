@@ -1,7 +1,7 @@
 from django.shortcuts import render
+from .models import Product
+from .serializers import ProductSerializer
 from rest_framework import generics
-from .models import Product, Category
-from .serializers import ProductSerializer, CategorySerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.postgres.search import (SearchVector,SearchQuery,SearchRank)
 from django.contrib.postgres.search import TrigramSimilarity
@@ -55,11 +55,3 @@ class ProductDetailView(generics.RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'slug'
-
-class CategoryListView(generics.ListAPIView):
-    serializer_class = CategorySerializer
-    pagination_class = None
-
-    def get_queryset(self):
-        # Return categories that have at least one available product
-        return Category.objects.filter(products__available=True).distinct()
