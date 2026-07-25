@@ -1,14 +1,37 @@
 import { Toggle } from "@/components/ui/toggle";
+import { categoryType } from "@/src/types/product_types";
 
-export function TaskFilters() {
+interface TaskFiltersProps {
+    categories: categoryType[];
+    selectedCategory: string | null;
+    onSelectCategory: (categoryId: string | null) => void;
+}
+
+export function TaskFilters({ categories, selectedCategory, onSelectCategory }: TaskFiltersProps) {
     return (
         <div className="flex flex-wrap items-center gap-2">
-            <Toggle variant="outline" aria-label="Toggle italic">
-                Food
+            <Toggle 
+                variant="outline" 
+                aria-label="Toggle All"
+                pressed={selectedCategory === null}
+                onPressedChange={() => onSelectCategory(null)}
+            >
+                All
             </Toggle>
-            <Toggle variant="outline" aria-label="Toggle bold">
-                Drinks
-            </Toggle>
+            {categories.map((category) => {
+                const isSelected = selectedCategory === category.id;
+                return (
+                    <Toggle 
+                        key={category.id}
+                        variant="outline" 
+                        aria-label={`Toggle ${category.name}`}
+                        pressed={isSelected}
+                        onPressedChange={(pressed) => onSelectCategory(pressed ? category.id : null)}
+                    >
+                        {category.name}
+                    </Toggle>
+                );
+            })}
         </div>
     )
 }
