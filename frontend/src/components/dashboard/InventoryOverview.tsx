@@ -60,7 +60,7 @@ export default function InventoryOverview() {
             .attr("transform", `translate(${width / 2}, ${height / 2})`);
 
         // Custom premium color scheme
-        const colors = ["#ea580c", "#f97316", "#fb923c", "#fdba74", "#fed7aa"];
+        const colors = ["#1b4332", "#40916c", "#74c69d", "#b7e4c7","d8f3dc"];
         const color = d3
             .scaleOrdinal<string>()
             .domain(topProducts.map((d) => d.name))
@@ -154,7 +154,7 @@ export default function InventoryOverview() {
             {/* Top Selling Products */}
             <div className="bg-white dark:bg-zinc-900 rounded-3xl p-6 shadow-sm border border-zinc-100 dark:border-zinc-800 flex flex-col justify-between">
                 <div className="flex items-center gap-2 mb-4">
-                    <TrendingUp className="w-5 h-5 text-orange-500" />
+                    <TrendingUp className="w-5 h-5 text-[#40916c]" />
                     <h2 className="text-lg font-bold text-zinc-950 dark:text-zinc-50">Top selling products</h2>
                 </div>
 
@@ -169,7 +169,7 @@ export default function InventoryOverview() {
                         </div>
                         <div className="flex-1 space-y-3 w-full">
                             {topProducts.slice(0, 5).map((p, idx) => {
-                                const colors = ["#ea580c", "#f97316", "#fb923c", "#fdba74", "#fed7aa"];
+                                const colors = ["#1b4332", "#40916c", "#74c69d", "#b7e4c7","d8f3dc"];
                                 return (
                                     <div key={p.product_id} className="flex items-center justify-between text-sm">
                                         <div className="flex items-center gap-2 max-w-150px truncate">
@@ -191,7 +191,7 @@ export default function InventoryOverview() {
             {/* Low Stock Products */}
             <div className="bg-white dark:bg-zinc-900 rounded-3xl p-6 shadow-sm border border-zinc-100 dark:border-zinc-800 flex flex-col justify-between">
                 <div className="flex items-center gap-2 mb-4">
-                    <Archive className="w-5 h-5 text-orange-500" />
+                    <Archive className="w-5 h-5 text-[#40916c]" />
                     <h2 className="text-lg font-bold text-zinc-950 dark:text-zinc-50">Low stock products</h2>
                 </div>
 
