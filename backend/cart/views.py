@@ -5,10 +5,10 @@ from .models import CartItem
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
-from users.permissions import IsAdmin
+from users.permissions import IsAdminOrCashier
 
 @api_view(['GET', 'DELETE'])
-@permission_classes([IsAdmin])
+@permission_classes([IsAdminOrCashier])
 def cart_detail(request):
     cart = Cart(request)
     
@@ -35,7 +35,7 @@ def cart_detail(request):
         }, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
-@permission_classes([IsAdmin])
+@permission_classes([IsAdminOrCashier])
 def cart_items(request):
     cart = Cart(request)
     product_id = request.data.get('product_id')
@@ -53,7 +53,7 @@ def cart_items(request):
     }, status=status.HTTP_200_OK)
 
 @api_view(['PATCH', 'DELETE'])
-@permission_classes([IsAdmin])
+@permission_classes([IsAdminOrCashier])
 def cart_item_detail(request, pk):
     cart = Cart(request)
     product = get_object_or_404(Product, id=pk)

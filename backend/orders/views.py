@@ -1,7 +1,8 @@
-from rest_framework.decorators import APIView
+from rest_framework.decorators import APIView, api_view, permission_classes
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 
 from cart.cart import Cart
 from .serializers import CheckoutSerializer, OrderSerializer
@@ -12,6 +13,7 @@ from django.template.loader import render_to_string
 from xhtml2pdf import pisa
 from django.shortcuts import get_object_or_404
 from .models import Order, OrderItem
+from users.permissions import IsAdminOrCashier
 
 
 class CheckoutView(APIView):
@@ -41,13 +43,30 @@ class CheckoutView(APIView):
 
 
 class OrderListAPIView(generics.ListAPIView):
-    queryset = Order.objects.all().prefetch_related('items')
     serializer_class = OrderSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.role == 'admin':
+            return Order.objects.all().prefetch_related('items')
+        return Order.objects.filter(user=user).prefetch_related('items')
 
 
+@api_view(['GET'])
+@permission_classes([IsAdminOrCashier])
 def generate_order_pdf(request, order_id):
-    order = get_object_or_404(Order.objects.prefetch_related('items__product'), id=order_id)
+    if request.user.role == 'cashier':
+        order = get_object_or_404(
+            Order.objects.prefetch_related('items__product'),
+            id=order_id,
+            user=request.user
+        )
+    else:
+        order = get_object_or_404(
+            Order.objects.prefetch_related('items__product'),
+            id=order_id
+        )
 
     html = render_to_string('orders/order/pdf.html', {
         'order': order
@@ -62,4 +81,5 @@ def generate_order_pdf(request, order_id):
         return HttpResponse('Error generating PDF', status=500)
 
     return response
+
 

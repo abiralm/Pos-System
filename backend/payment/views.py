@@ -23,7 +23,12 @@ class PaymentView(APIView):
 
         order_id = serializer.validated_data['order_id']
         method = serializer.validated_data['method']
-        order = get_object_or_404(Order, id=order_id)
+        
+        # Ensure the requesting user owns this order (admins can pay for any order)
+        if request.user.role == 'admin':
+            order = get_object_or_404(Order, id=order_id)
+        else:
+            order = get_object_or_404(Order, id=order_id, user=request.user)
 
         if order.status == 'paid':
             return Response({"error": "Already paid"}, status=400)

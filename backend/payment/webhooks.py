@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from orders.models import Order
 from .tasks import notify_payment 
 from orders.services import complete_order
+from .models import Payment
 
 @csrf_exempt
 def stripe_webhook(request):
@@ -33,7 +34,12 @@ def stripe_webhook(request):
             if order.status == 'paid':
                 return HttpResponse(status=200)
 
-            payment = order.payments.get(stripe_id=session['id'])
+            try:
+                payment = order.payments.get(stripe_id=session['id'])
+            except Payment.DoesNotExist:
+                # Payment record not found - acknowledge so Stripe stops retrying
+                return HttpResponse(status=200)
+
             payment.status = 'completed'
             payment.save()
 
