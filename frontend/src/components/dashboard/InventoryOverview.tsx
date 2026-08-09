@@ -111,7 +111,7 @@ export default function InventoryOverview() {
             .attr("stroke-width", 2)
             .style("cursor", "pointer")
             .on("mouseover", function (event, d) {
-                d3.select(this)
+                d3.select<SVGPathElement, d3.PieArcDatum<TopProduct>>(this)
                     .transition()
                     .duration(200)
                     .attr("d", arcHover);
@@ -129,7 +129,7 @@ export default function InventoryOverview() {
                     .style("top", `${my - 24}px`);
             })
             .on("mouseleave", function () {
-                d3.select(this)
+                d3.select<SVGPathElement, d3.PieArcDatum<TopProduct>>(this)
                     .transition()
                     .duration(200)
                     .attr("d", arc);
