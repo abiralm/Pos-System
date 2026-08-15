@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import AllowAny  # Adjust permission policy if auth is required
+from users.permissions import IsAdmin
 
 from .services import DashboardService
 
@@ -21,7 +21,7 @@ def _parse_range(raw_range, default_days=7):
 
 class DashboardStatsView(APIView):
     """GET /dashboard/stats — KPI cards + order status breakdown."""
-    permission_classes = [AllowAny]
+    permission_classes = [IsAdmin]
 
     def get(self, request):
         data = {
@@ -33,7 +33,7 @@ class DashboardStatsView(APIView):
 
 class DashboardChartsView(APIView):
     """GET /dashboard/charts?range=7d — sales trend chart."""
-    permission_classes = [AllowAny]
+    permission_classes = [IsAdmin]
 
     def get(self, request):
         days = _parse_range(request.query_params.get('range'))
@@ -45,7 +45,7 @@ class DashboardChartsView(APIView):
 
 class DashboardTopProductsView(APIView):
     """GET /dashboard/top-products"""
-    permission_classes = [AllowAny]
+    permission_classes = [IsAdmin]
 
     def get(self, request):
         data = {
@@ -56,7 +56,7 @@ class DashboardTopProductsView(APIView):
 
 class DashboardLowStockView(APIView):
     """GET /dashboard/low-stock"""
-    permission_classes = [AllowAny]
+    permission_classes = [IsAdmin]
 
     def get(self, request):
         data = {
@@ -67,7 +67,7 @@ class DashboardLowStockView(APIView):
 
 class DashboardRecentOrdersView(APIView):
     """GET /dashboard/recent-orders"""
-    permission_classes = [AllowAny]
+    permission_classes = [IsAdmin]
 
     def get(self, request):
         data = {

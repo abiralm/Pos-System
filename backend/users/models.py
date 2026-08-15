@@ -3,8 +3,9 @@ from django.db import models
 
 class User(AbstractUser):
     ROLES = (
-        ('admin','Admin'),
-        ('visitor','Visitor'),
+        ('admin',   'Admin'),
+        ('cashier', 'Cashier'),  # Can operate the POS terminal; cannot access admin analytics
+        ('visitor', 'Visitor'),
     )
     role = models.CharField(max_length=50, choices=ROLES, default='visitor')
     email = models.EmailField(blank= False, unique=True)
