@@ -4,6 +4,6 @@ app_name ='orders'
 
 urlpatterns = [
     path('', OrderListAPIView.as_view(), name='order_list'),
-    path('checkout/', CheckoutView.as_view(), name='cart_detail'),
+    path('checkout/', CheckoutView.as_view(), name='checkout'),
     path('<int:order_id>/pdf/', generate_order_pdf, name='order_pdf')
 ]

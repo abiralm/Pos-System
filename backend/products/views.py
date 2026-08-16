@@ -20,7 +20,7 @@ class ProductListView(generics.ListAPIView):
     pagination_class= CustomPagination
     
     def get_queryset(self):
-        qs = Product.objects.all()
+        qs = Product.objects.filter(deleted_at__isnull=True)
         q = self.request.query_params.get('search', '').strip()
         if q:
             if len(q) < 3:
@@ -52,7 +52,7 @@ class ProductListView(generics.ListAPIView):
         return qs
 
 class ProductDetailView(generics.RetrieveAPIView):
-    queryset = Product.objects.all()
+    queryset = Product.objects.filter(deleted_at__isnull=True)
     serializer_class = ProductSerializer
     lookup_field = 'slug'
 
@@ -61,5 +61,5 @@ class CategoryListView(generics.ListAPIView):
     pagination_class = None
 
     def get_queryset(self):
-        # Return categories that have at least one available product
-        return Category.objects.filter(products__available=True).distinct()
+        # Return categories that have at least one available, non-deleted product
+        return Category.objects.filter(products__available=True, products__deleted_at__isnull=True).distinct()
