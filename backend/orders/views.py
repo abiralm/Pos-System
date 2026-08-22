@@ -3,6 +3,7 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import LimitOffsetPagination
 
 from cart.cart import Cart
 from .serializers import CheckoutSerializer, OrderSerializer
@@ -41,10 +42,14 @@ class CheckoutView(APIView):
             "total": order.get_grand_total()
         },status=status.HTTP_200_OK)
 
+class OrderPagination(LimitOffsetPagination):
+    default_limit = 10
+    max_limit = 100
 
 class OrderListAPIView(generics.ListAPIView):
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = OrderPagination
 
     def get_queryset(self):
         user = self.request.user
