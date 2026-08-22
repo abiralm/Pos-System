@@ -1,30 +1,39 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Order } from "@/src/types/order_types";
 import { getOrders } from "@/src/services/order_api";
 import { AppSidebar } from "@/src/components/app-sidebar";
-import { Eye, Trash } from "lucide-react";
+import { Eye, Trash, ArrowLeft, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 
 export default function OrdersPage() {
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
+    const [offset, setOffset] = useState<number>(0);
+    const limit = 10;
+    const [totalCount, setTotalCount] = useState<number>(0);
+
+    const fetchOrders = useCallback(async (currentOffset: number) => {
+        setLoading(true);
+        try {
+            const data = await getOrders(limit, currentOffset);
+            if (data) {
+                setOrders(data.results || []);
+                setTotalCount(data.count || 0);
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
 
     useEffect(() => {
-        const fetchOrders = async () => {
-            try {
-                const data = await getOrders();
-                setOrders(data);
-            } catch (error) {
-                console.error(error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchOrders();
-    }, []);
+        fetchOrders(offset);
+    }, [offset, fetchOrders]);
 
     return (
         <SidebarProvider>
@@ -60,7 +69,7 @@ export default function OrdersPage() {
                                         <tbody>
                                             {orders.length === 0 ? (
                                                 <tr>
-                                                    <td colSpan={5} className="p-8 text-center text-slate-500">
+                                                    <td colSpan={6} className="p-8 text-center text-slate-500">
                                                         No orders found.
                                                     </td>
                                                 </tr>
@@ -88,8 +97,8 @@ export default function OrdersPage() {
                                                         </td>
                                                         <td className="p-4 font-semibold text-slate-800">
                                                             <div className="flex gap-4">
-                                                                <Eye size={18}/>
-                                                                <Trash size={18} />
+                                                                 <Eye size={18}/>
+                                                                 <Trash size={18} />
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -97,6 +106,35 @@ export default function OrdersPage() {
                                             )}
                                         </tbody>
                                     </table>
+                                </div>
+                                <div className="flex justify-between items-center p-4 border-t border-slate-200 bg-slate-50">
+                                    <span className="text-sm font-medium text-slate-700">
+                                        Showing {totalCount === 0 ? 0 : offset + 1} to {Math.min(offset + limit, totalCount)} of {totalCount}
+                                    </span>
+                                    <div className="flex gap-2">
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            disabled={offset === 0}
+                                            onClick={() => {
+                                                const newOffset = Math.max(0, offset - limit);
+                                                setOffset(newOffset);
+                                            }}
+                                        >
+                                            <ArrowLeft className="h-4 w-4 mr-2" /> Previous
+                                        </Button>
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            disabled={offset + limit >= totalCount}
+                                            onClick={() => {
+                                                const newOffset = offset + limit;
+                                                setOffset(newOffset);
+                                            }}
+                                        >
+                                            Next <ArrowRight className="h-4 w-4 ml-2" />
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
                         )}
