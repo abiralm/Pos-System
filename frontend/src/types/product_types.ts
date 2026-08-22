@@ -22,7 +22,7 @@ export type ProductListType = {
     available: boolean,
     created: string,
     updated: string,
-    image?: string
+    image?: string | null
 }
 
 export type CatalogType = {
