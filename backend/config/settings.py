@@ -160,6 +160,10 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# Media files (User uploaded images/files)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 CART_SESSION_ID = 'cart'
 
 CELERY_BROKER_URL = config('CELERY_BROKER_URL')
