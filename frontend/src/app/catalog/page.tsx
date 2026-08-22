@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge"
 import { useCartStore } from "@/src/store/cartStore";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { getProductImageUrl } from "@/lib/utils";
 
 export default function Home() {
 
@@ -111,10 +112,13 @@ export default function Home() {
           products.map((product) => (
             <Card key={product.id} className="overflow-hidden rounded-xl pt-0 border-0">
               <CardContent className="p-0">
-                <div className="h-64 w-full relative">
+                <div className="h-64 w-full relative bg-gray-100 dark:bg-zinc-800">
                   <img
-                    src="/chips.jpg"
+                    src={getProductImageUrl(product.image)}
                     alt={product.name}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = "/chips.jpg";
+                    }}
                     className="h-full w-full object-cover relative"
                   />
                   <Badge className="rounded-2xl absolute z-10 top-2 right-2">In Stock: {product.stock}</Badge>

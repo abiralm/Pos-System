@@ -19,3 +19,10 @@ export type Order = {
     grand_total: string;
     items: OrderItem[];
 }
+
+export type OrderListResponseType = {
+    count: number;
+    next: string | null;
+    previous: string | null;
+    results: Order[];
+}
