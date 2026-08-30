@@ -22,7 +22,8 @@ export type ProductListType = {
     available: boolean,
     created: string,
     updated: string,
-    image?: string | null
+    image?: string | null,
+    specifications?: Record<string, any> | null
 }
 
 export type CatalogType = {

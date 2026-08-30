@@ -35,6 +35,11 @@ class Product(models.Model):
         upload_to='products/%Y/%m/%d',
         blank=True
     )
+    specifications = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text="Store flexible product details like weight, dimensions, quantity, etc."
+    )
 
     class Meta:
         ordering = ['name']

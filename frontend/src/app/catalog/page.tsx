@@ -88,12 +88,13 @@ export default function Home() {
     <main className="m-6">
 
       <div className="w-full flex flex-col gap-4 p-2 m-2">
-        <div className="flex justify-between">
+        <div className="flex justify-between items-center">
           <SearchBar
             value={searchQuery}
             onChange={handleSearchChange}
             onSearch={() => fetchProducts(searchQuery, offset, selectedCategory)}
           />
+          <CartSheet />
         </div>
         <TaskFilters
           categories={categories}
@@ -173,8 +174,6 @@ export default function Home() {
           </Button>
         </div>
       </div>
-
-      <CartSheet />
     </main>
   );
 }
