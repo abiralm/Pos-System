@@ -1,4 +1,4 @@
-import { CatalogType, ProductQueryParamsType, categoryType } from "../types/product_types";
+import { CatalogType, ProductListType, ProductQueryParamsType, categoryType } from "../types/product_types";
 import { axiosInstance } from "./instance";
 
 export const getProducts = async (query?: string, limit?: number, offset?: number, category?: string): Promise<CatalogType> => {
@@ -23,6 +23,16 @@ export const getCategories = async (): Promise<categoryType[]> => {
         return response.data;
     } catch (error) {
         console.error("Error fetching categories:", error);
+        throw error;
+    }
+};
+
+export const getProductBySlug = async (slug: string): Promise<ProductListType> => {
+    try {
+        const response = await axiosInstance.get(`/api/products/${slug}/`);
+        return response.data;
+    } catch (error) {
+        console.error(`Error fetching product with slug ${slug}:`, error);
         throw error;
     }
 };
